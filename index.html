@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V&P Service</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f4f4;
+      color: #222;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 25px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: #cbd5e1;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .search {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 25px;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+    }
+
+    .category {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .category h3 {
+      color: #111827;
+      margin-bottom: 15px;
+      font-size: 21px;
+    }
+
+    .phone {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .phone:last-child {
+      border-bottom: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      margin-top: 40px;
+      background: #111827;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>V&P Service</h1>
+    <p>Náhradné diely a servis mobilných telefónov</p>
+  </header>
+
+  <div class="container">
+
+    <input
+      type="text"
+      id="search"
+      class="search"
+      placeholder="🔍 Hľadať model telefónu..."
+      onkeyup="searchPhones()"
+    >
+
+    <h2>Maticečné dosky</h2>
+
+    <div class="category">
+      <h3>Samsung Galaxy</h3>
+
+      <div class="phone">Samsung Galaxy A12</div>
+      <div class="phone">Samsung Galaxy A13</div>
+      <div class="phone">Samsung Galaxy A14</div>
+      <div class="phone">Samsung Galaxy A15</div>
+      <div class="phone">Samsung Galaxy A22</div>
+      <div class="phone">Samsung Galaxy A23</div>
+      <div class="phone">Samsung Galaxy A32</div>
+      <div class="phone">Samsung Galaxy A33</div>
+      <div class="phone">Samsung Galaxy A52</div>
+      <div class="phone">Samsung Galaxy A53</div>
+    </div>
+
+    <div class="category">
+      <h3>Apple iPhone</h3>
+
+      <div class="phone">iPhone 11</div>
+      <div class="phone">iPhone 12</div>
+      <div class="phone">iPhone 13</div>
+      <div class="phone">iPhone 14</div>
+      <div class="phone">iPhone 15</div>
+    </div>
+
+    <div class="category">
+      <h3>Xiaomi</h3>
+
+      <div class="phone">Xiaomi Redmi Note 10</div>
+      <div class="phone">Xiaomi Redmi Note 11</div>
+      <div class="phone">Xiaomi Redmi Note 12</div>
+      <div class="phone">Xiaomi Redmi Note 13</div>
+    </div>
+
+  </div>
+
+  <footer>
+    © 2026 V&P Service
+  </footer>
+
+  <script>
+    function searchPhones() {
+      let search = document.getElementById("search").value.toLowerCase();
+      let phones = document.querySelectorAll(".phone");
+
+      phones.forEach(function(phone) {
+        let name = phone.textContent.toLowerCase();
+
+        if (name.includes(search)) {
+          phone.style.display = "block";
+        } else {
+          phone.style.display = "none";
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
