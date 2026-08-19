@@ -1,166 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>V&P Service</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      background: #f4f4f4;
-      color: #222;
-    }
-
-    header {
-      background: #111827;
-      color: white;
-      padding: 25px 20px;
-      text-align: center;
-    }
-
-    header h1 {
-      font-size: 32px;
-      margin-bottom: 8px;
-    }
-
-    header p {
-      color: #cbd5e1;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-
-    .search {
-      width: 100%;
-      padding: 15px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 16px;
-      margin-bottom: 25px;
-    }
-
-    h2 {
-      margin-bottom: 15px;
-    }
-
-    .category {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .category h3 {
-      color: #111827;
-      margin-bottom: 15px;
-      font-size: 21px;
-    }
-
-    .phone {
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .phone:last-child {
-      border-bottom: none;
-    }
-
-    footer {
-      text-align: center;
-      padding: 25px;
-      margin-top: 40px;
-      background: #111827;
-      color: white;
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>V&P Service | Sklad náhradných dielov</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
+<header class="topbar">
+  <div class="brand"><span>V&P</span> Service</div>
+  <nav><a href="#sklad">Sklad</a><a href="#objednavka">Objednávka</a><button id="adminBtn" class="ghost">Administrácia</button></nav>
+</header>
 
-  <header>
-    <h1>V&P Service</h1>
-    <p>Náhradné diely a servis mobilných telefónov</p>
-  </header>
-
-  <div class="container">
-
-    <input
-      type="text"
-      id="search"
-      class="search"
-      placeholder="🔍 Hľadať model telefónu..."
-      onkeyup="searchPhones()"
-    >
-
-    <h2>Maticečné dosky</h2>
-
-    <div class="category">
-      <h3>Samsung Galaxy</h3>
-
-      <div class="phone">Samsung Galaxy A12</div>
-      <div class="phone">Samsung Galaxy A13</div>
-      <div class="phone">Samsung Galaxy A14</div>
-      <div class="phone">Samsung Galaxy A15</div>
-      <div class="phone">Samsung Galaxy A22</div>
-      <div class="phone">Samsung Galaxy A23</div>
-      <div class="phone">Samsung Galaxy A32</div>
-      <div class="phone">Samsung Galaxy A33</div>
-      <div class="phone">Samsung Galaxy A52</div>
-      <div class="phone">Samsung Galaxy A53</div>
-    </div>
-
-    <div class="category">
-      <h3>Apple iPhone</h3>
-
-      <div class="phone">iPhone 11</div>
-      <div class="phone">iPhone 12</div>
-      <div class="phone">iPhone 13</div>
-      <div class="phone">iPhone 14</div>
-      <div class="phone">iPhone 15</div>
-    </div>
-
-    <div class="category">
-      <h3>Xiaomi</h3>
-
-      <div class="phone">Xiaomi Redmi Note 10</div>
-      <div class="phone">Xiaomi Redmi Note 11</div>
-      <div class="phone">Xiaomi Redmi Note 12</div>
-      <div class="phone">Xiaomi Redmi Note 13</div>
-    </div>
-
+<section class="hero">
+  <div>
+    <p class="eyebrow">V&P SERVICE</p>
+    <h1>Náhradné diely<br>skladom.</h1>
+    <p class="lead">Pozrite si aktuálne dostupné súčiastky a vytvorte objednávku jednoducho online.</p>
+    <a class="btn" href="#sklad">Pozrieť sklad</a>
   </div>
+  <div class="hero-card"><strong id="stockCount">0</strong><span>súčiastok v ponuke</span><strong id="availableCount">0</strong><span>ks aktuálne skladom</span></div>
+</section>
 
-  <footer>
-    © 2026 V&P Service
-  </footer>
+<main>
+<section id="sklad" class="section">
+  <div class="section-head"><div><p class="eyebrow">SKLAD</p><h2>Dostupné súčiastky</h2></div>
+    <input id="search" type="search" placeholder="Hľadať súčiastku alebo kód…">
+  </div>
+  <div id="products" class="grid"></div>
+</section>
 
-  <script>
-    function searchPhones() {
-      let search = document.getElementById("search").value.toLowerCase();
-      let phones = document.querySelectorAll(".phone");
+<section id="objednavka" class="section order-section">
+  <div><p class="eyebrow">OBJEDNÁVKA</p><h2>Vaša objednávka</h2><div id="cart"></div></div>
+  <form id="orderForm" class="form">
+    <input name="name" placeholder="Meno a priezvisko *" required>
+    <input name="company" placeholder="Firma">
+    <input name="email" type="email" placeholder="E-mail *" required>
+    <input name="phone" placeholder="Telefón *" required>
+    <textarea name="note" placeholder="Poznámka k objednávke"></textarea>
+    <button class="btn" type="submit">Odoslať objednávku</button>
+    <p class="muted">Odoslanie je v tejto demo verzii simulované.</p>
+  </form>
+</section>
+</main>
 
-      phones.forEach(function(phone) {
-        let name = phone.textContent.toLowerCase();
-
-        if (name.includes(search)) {
-          phone.style.display = "block";
-        } else {
-          phone.style.display = "none";
-        }
-      });
-    }
-  </script>
-
+<div id="adminModal" class="modal hidden">
+  <div class="modal-box">
+    <button class="close" id="closeAdmin">×</button>
+    <p class="eyebrow">ADMINISTRÁCIA</p><h2>Správa skladu</h2>
+    <form id="addForm" class="admin-form">
+      <input name="name" placeholder="Názov súčiastky" required>
+      <input name="code" placeholder="Kód / OEM číslo" required>
+      <input name="price" type="number" min="0" step="0.01" placeholder="Cena €" required>
+      <input name="qty" type="number" min="0" placeholder="Počet ks" required>
+      <button class="btn" type="submit">Pridať súčiastku</button>
+    </form>
+    <div id="adminList"></div>
+    <button id="resetBtn" class="danger">Obnoviť demo sklad</button>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
 </body>
 </html>
