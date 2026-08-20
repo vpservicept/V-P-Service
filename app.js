@@ -76,6 +76,7 @@ function render() {
     productsEl.innerHTML = list.map(p => `
       <article class="product">
         <h3>${p.name}</h3>
+        <img src="${p.name}.jpg" alt="${p.name}" class="product-image">
         <div class="code">${p.code}</div>
         <div class="price">${p.price > 0 ? p.price.toFixed(2) + " €" : "Cena na vyžiadanie"}</div>
         <div class="stock">Skladom: ${p.qty} ks</div>
