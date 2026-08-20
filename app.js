@@ -68,6 +68,106 @@ function save() {
 }
 
 
+/* =========================================================
+   OBRÁZKY PRODUKTOV
+   ========================================================= */
+
+function getImageNames(productName) {
+
+  const specialImages = {
+
+    "Huawei Y5-2": [
+      "Huawei Y5 II.png",
+      "Huawei Y5-2.jpg",
+      "Huawei Y5-2.png"
+    ]
+
+  };
+
+  if (specialImages[productName]) {
+    return specialImages[productName];
+  }
+
+  /*
+    Pri dlhom názve, napríklad:
+    Infinix Smart 8 – poškodený konektor flex od displeja
+
+    sa použije iba:
+    Infinix Smart 8
+  */
+
+  const shortName =
+    productName.split(" – ")[0].trim();
+
+  return [
+    shortName + ".jpg",
+    shortName + ".jpeg",
+    shortName + ".png"
+  ];
+}
+
+
+/*
+  Vytvorí obrázok a automaticky skúsi JPG, JPEG a PNG.
+  Ak obrázok neexistuje, skúsi ďalší formát.
+*/
+
+function createProductImage(productName) {
+
+  const imageNames =
+    getImageNames(productName);
+
+  let index = 0;
+
+  const img =
+    document.createElement("img");
+
+  img.alt = productName;
+
+  img.style.width = "100%";
+  img.style.height = "220px";
+  img.style.objectFit = "contain";
+  img.style.borderRadius = "12px";
+  img.style.marginBottom = "15px";
+  img.style.background = "#f5f5f5";
+  img.style.display = "block";
+
+  function tryNextImage() {
+
+    if (index >= imageNames.length) {
+
+      /*
+        Ak obrázok neexistuje,
+        obrázok sa jednoducho skryje.
+      */
+
+      img.style.display = "none";
+      return;
+    }
+
+    const fileName =
+      imageNames[index];
+
+    index++;
+
+    img.src =
+      encodeURI(fileName);
+  }
+
+  img.onerror = function() {
+    tryNextImage();
+  };
+
+  tryNextImage();
+
+  return img;
+}
+
+
+/* =========================================================
+   VYKRESLENIE PRODUKTOV
+   ========================================================= */
+
 function render() {
 
   const search =
@@ -75,70 +175,169 @@ function render() {
       .toLowerCase()
       .trim();
 
-  const list = products.filter(p =>
-    p.name.toLowerCase().includes(search) ||
-    p.code.toLowerCase().includes(search)
-  );
+
+  const list =
+    products.filter(p =>
+      p.name.toLowerCase().includes(search) ||
+      p.code.toLowerCase().includes(search)
+    );
 
 
-  const productsEl = qs("#products");
+  const productsEl =
+    qs("#products");
 
 
   if (productsEl) {
 
-    productsEl.innerHTML = list.map(p => `
+    productsEl.innerHTML = "";
 
-      <article class="product">
 
-        <h3>${p.name}</h3>
+    list.forEach(p => {
 
-        <div class="code">
-          ${p.code}
-        </div>
+      const article =
+        document.createElement("article");
 
-        <div class="price">
-          ${p.price > 0
-            ? p.price.toFixed(2) + " €"
-            : "Cena na vyžiadanie"}
-        </div>
+      article.className =
+        "product";
 
-        <div class="stock">
-          Skladom: ${p.qty} ks
-        </div>
 
-        <button onclick="add(${p.id})">
-          Pridať do objednávky
-        </button>
+      /* OBRÁZOK */
 
-      </article>
+      const image =
+        createProductImage(p.name);
 
-    `).join("");
+      article.appendChild(image);
+
+
+      /* NÁZOV */
+
+      const title =
+        document.createElement("h3");
+
+      title.textContent =
+        p.name;
+
+      article.appendChild(title);
+
+
+      /* KÓD */
+
+      const code =
+        document.createElement("div");
+
+      code.className =
+        "code";
+
+      code.textContent =
+        p.code;
+
+      article.appendChild(code);
+
+
+      /* CENA */
+
+      const price =
+        document.createElement("div");
+
+      price.className =
+        "price";
+
+      price.textContent =
+        p.price > 0
+          ? p.price.toFixed(2) + " €"
+          : "Cena na vyžiadanie";
+
+      article.appendChild(price);
+
+
+      /* SKLAD */
+
+      const stock =
+        document.createElement("div");
+
+      stock.className =
+        "stock";
+
+      stock.textContent =
+        "Skladom: " + p.qty + " ks";
+
+      article.appendChild(stock);
+
+
+      /* TLAČIDLO */
+
+      const button =
+        document.createElement("button");
+
+      button.textContent =
+        "Pridať do objednávky";
+
+      button.onclick =
+        () => add(p.id);
+
+      article.appendChild(button);
+
+
+      productsEl.appendChild(article);
+
+    });
 
   }
 
 
-  const stockCount = qs("#stockCount");
+  const stockCount =
+    qs("#stockCount");
+
 
   if (stockCount) {
+
     stockCount.textContent =
-      products.reduce((sum, p) => sum + p.qty, 0);
+      products.reduce(
+        (sum, p) => sum + p.qty,
+        0
+      );
+
   }
 
 
-  const productCount = qs("#productCount");
+  const availableCount =
+    qs("#availableCount");
+
+
+  if (availableCount) {
+
+    availableCount.textContent =
+      products.reduce(
+        (sum, p) => sum + p.qty,
+        0
+      );
+
+  }
+
+
+  const productCount =
+    qs("#productCount");
+
 
   if (productCount) {
+
     productCount.textContent =
       products.length;
+
   }
 
 }
 
 
+/* =========================================================
+   OBJEDNÁVKA
+   ========================================================= */
+
 function add(id) {
 
   const product =
     products.find(p => p.id === id);
+
 
   if (!product || product.qty <= 0) {
     return;
@@ -170,14 +369,18 @@ function add(id) {
 
   renderCart();
 
-  alert("Diel bol pridaný do objednávky.");
+  alert(
+    "Diel bol pridaný do objednávky."
+  );
 
 }
 
 
 function renderCart() {
 
-  const cartEl = qs("#cart");
+  const cartEl =
+    qs("#cart");
+
 
   if (!cartEl) {
     return;
@@ -193,23 +396,27 @@ function renderCart() {
   }
 
 
-  cartEl.innerHTML = cart.map(item => `
+  cartEl.innerHTML =
+    cart.map(item => `
 
-    <div class="cart-item">
+      <div class="cart-item">
 
-      <strong>${item.name}</strong>
+        <strong>
+          ${item.name}
+        </strong>
 
-      <span>
-        ${item.amount} ks
-      </span>
+        <span>
+          ${item.amount} ks
+        </span>
 
-      <button onclick="removeFromCart(${item.id})">
-        Odstrániť
-      </button>
+        <button
+          onclick="removeFromCart(${item.id})">
+          Odstrániť
+        </button>
 
-    </div>
+      </div>
 
-  `).join("");
+    `).join("");
 
 }
 
@@ -217,7 +424,9 @@ function renderCart() {
 function removeFromCart(id) {
 
   cart =
-    cart.filter(item => item.id !== id);
+    cart.filter(
+      item => item.id !== id
+    );
 
   save();
 
@@ -237,17 +446,31 @@ function clearCart() {
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
+/* =========================================================
+   SPUSTENIE STRÁNKY
+   ========================================================= */
 
-  render();
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-  renderCart();
+    render();
+
+    renderCart();
 
 
-  const search = qs("#search");
+    const search =
+      qs("#search");
 
-  if (search) {
-    search.addEventListener("input", render);
+
+    if (search) {
+
+      search.addEventListener(
+        "input",
+        render
+      );
+
+    }
+
   }
-
-});
+);
