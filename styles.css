@@ -6,13 +6,29 @@ html {
   scroll-behavior: smooth;
 }
 
+:root {
+  --bg-dark: #09070f;
+  --card: rgba(20, 16, 32, 0.88);
+  --card-hover: rgba(31, 24, 48, 0.96);
+  --border: rgba(255, 255, 255, 0.12);
+  --text: #ffffff;
+  --muted: #aaa5b7;
+  --accent: #9b5cff;
+  --accent-light: #bd8cff;
+  --success: #43d17a;
+}
+
 body {
   margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
-  color: #fff;
+  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
 
-  background-image:
-    linear-gradient(rgba(10, 5, 20, 0.72), rgba(10, 5, 20, 0.72)),
+  background:
+    linear-gradient(
+      rgba(7, 4, 15, 0.78),
+      rgba(7, 4, 15, 0.88)
+    ),
     url("pozadie.jpg");
 
   background-size: cover;
@@ -21,117 +37,718 @@ body {
   background-repeat: no-repeat;
 }
 
-/* Hlavný obsah */
-main,
-.container {
-  width: min(1200px, 94%);
+/* =========================
+   HLAVNÝ OBSAH
+========================= */
+
+main {
+  width: min(1200px, 92%);
   margin: 0 auto;
 }
 
-/* Nadpisy */
+.section {
+  padding: 80px 0;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 35px;
+}
+
+.section-head > div {
+  flex: 1;
+}
+
+/* =========================
+   NADPISY
+========================= */
+
 h1,
 h2,
 h3 {
-  text-align: center;
+  margin-top: 0;
 }
 
-/* Zoznam produktov */
-.products,
-.product-list,
-#products {
+h1 {
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: 0.98;
+  letter-spacing: -2px;
+  margin-bottom: 25px;
+}
+
+h2 {
+  font-size: clamp(30px, 4vw, 46px);
+  margin-bottom: 10px;
+  letter-spacing: -1px;
+}
+
+h3 {
+  font-size: 19px;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--accent-light);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+
+/* =========================
+   HORNÁ LIŠTA
+========================= */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  padding: 18px 4%;
+
+  background: rgba(8, 5, 15, 0.82);
+  border-bottom: 1px solid var(--border);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.brand {
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.brand span {
+  color: var(--accent-light);
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+nav a,
+nav button {
+  color: #fff;
+  text-decoration: none;
+  background: transparent;
+  padding: 9px 14px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+nav a:hover,
+nav button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 1;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+  width: min(1200px, 92%);
+  min-height: 650px;
+  margin: 0 auto;
+
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  width: 100%;
-  margin: 25px auto;
+  grid-template-columns: 1.4fr 0.6fr;
+  align-items: center;
+  gap: 50px;
 }
 
-/* Karta telefónu */
-.product,
-.product-card,
-.card {
-  background: rgba(20, 15, 35, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  padding: 18px;
-  text-align: center;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
-}
-
-/* Obrázky telefónov */
-.product img,
-.product-card img,
-.card img {
-  display: block;
-  width: 100%;
-  max-width: 180px;
-  height: 180px;
-  object-fit: contain;
-  margin: 0 auto 15px;
-  border-radius: 12px;
-}
-
-/* Názov produktu */
-.product h3,
-.product-card h3,
-.card h3 {
-  margin: 8px 0;
+.hero .lead {
+  max-width: 600px;
+  color: var(--muted);
   font-size: 18px;
+  line-height: 1.7;
+  margin-bottom: 30px;
 }
 
-/* Tlačidlá */
+.hero-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+
+  padding: 28px;
+
+  background: rgba(20, 15, 35, 0.82);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  backdrop-filter: blur(15px);
+}
+
+.hero-card strong {
+  font-size: 38px;
+  color: var(--accent-light);
+}
+
+.hero-card span {
+  align-self: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* =========================
+   TLAČIDLÁ
+========================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 12px;
+
+  padding: 13px 22px;
+
+  color: white;
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    #7040d8
+  );
+
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 30px rgba(155, 92, 255, 0.25);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.btn:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow:
+    0 15px 35px rgba(155, 92, 255, 0.38);
+}
+
 button {
   cursor: pointer;
   border: 0;
   border-radius: 10px;
-  padding: 10px 16px;
-  font-size: 15px;
+  padding: 10px 15px;
+  font-size: 14px;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  transition: 0.2s ease;
 }
 
 button:hover {
-  opacity: 0.85;
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.17);
 }
 
-/* Vyhľadávanie */
-input,
-select {
-  padding: 11px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(0, 0, 0, 0.45);
+/* =========================
+   VYHĽADÁVANIE
+========================= */
+
+#search {
+  width: 320px;
+  max-width: 100%;
+
+  padding: 14px 17px;
+
   color: white;
+  background: rgba(10, 7, 18, 0.72);
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  outline: none;
+
+  font-size: 14px;
+
+  transition: 0.2s ease;
 }
 
-/* Objednávka */
-.cart,
-.order,
-#cart,
-#order {
-  width: min(800px, 94%);
-  margin: 30px auto;
+#search::placeholder {
+  color: #85808f;
+}
+
+#search:focus {
+  border-color: rgba(155, 92, 255, 0.65);
+  box-shadow: 0 0 0 4px rgba(155, 92, 255, 0.1);
+}
+
+/* =========================
+   PRODUKTY
+========================= */
+
+#products {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+/* =========================
+   KARTA PRODUKTU
+========================= */
+
+.product {
+  position: relative;
+
+  padding: 17px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(31, 24, 48, 0.92),
+      rgba(15, 12, 25, 0.92)
+    );
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  text-align: center;
+
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.28);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.product:hover {
+  transform: translateY(-6px);
+
+  border-color:
+    rgba(155, 92, 255, 0.45);
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.42),
+    0 0 30px rgba(155, 92, 255, 0.08);
+}
+
+/* =========================
+   OBRÁZOK PRODUKTU
+========================= */
+
+.product img {
+  display: block;
+
+  width: 100%;
+  height: 210px;
+
+  object-fit: contain;
+
+  margin: 0 auto 17px;
+
+  padding: 10px;
+
+  border-radius: 14px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.07),
+      rgba(255, 255, 255, 0.015)
+    );
+
+  transition:
+    transform 0.3s ease;
+}
+
+.product:hover img {
+  transform: scale(1.04);
+}
+
+/* =========================
+   INFORMÁCIE PRODUKTU
+========================= */
+
+.product h3 {
+  min-height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 5px 0 8px;
+
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.code {
+  color: #817b8e;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.price {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.stock {
+  display: inline-block;
+
+  margin-bottom: 15px;
+  padding: 5px 9px;
+
+  color: var(--success);
+
+  background: rgba(67, 209, 122, 0.09);
+
+  border: 1px solid rgba(67, 209, 122, 0.15);
+
+  border-radius: 7px;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.product button {
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    #7040d8
+  );
+  font-weight: 700;
+}
+
+.product button:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 20px rgba(155, 92, 255, 0.25);
+}
+
+/* =========================
+   OBJEDNÁVKA
+========================= */
+
+.order-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: start;
+}
+
+#cart {
+  min-height: 100px;
+
   padding: 20px;
-  background: rgba(20, 15, 35, 0.9);
-  border-radius: 16px;
+
+  background: rgba(20, 15, 35, 0.82);
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
 }
 
-/* Mobil */
-@media (max-width: 600px) {
-  .products,
-  .product-list,
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  padding: 14px 0;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cart-item:last-child {
+  border-bottom: 0;
+}
+
+.cart-item strong {
+  font-size: 14px;
+}
+
+/* =========================
+   FORMULÁR
+========================= */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+
+  padding: 25px;
+
+  background: rgba(20, 15, 35, 0.82);
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+
+.form input,
+.form textarea {
+  width: 100%;
+
+  padding: 14px 15px;
+
+  color: white;
+
+  background: rgba(0, 0, 0, 0.25);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+
+  outline: none;
+
+  font: inherit;
+}
+
+.form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form input:focus,
+.form textarea:focus {
+  border-color: rgba(155, 92, 255, 0.6);
+}
+
+.form .btn {
+  width: 100%;
+}
+
+.muted {
+  color: #777181;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* =========================
+   ADMINISTRÁCIA
+========================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.7);
+
+  backdrop-filter: blur(8px);
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-box {
+  position: relative;
+
+  width: min(650px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+
+  padding: 30px;
+
+  background: #171222;
+
+  border: 1px solid var(--border);
+  border-radius: 22px;
+
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.6);
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+
+  width: 38px;
+  height: 38px;
+
+  padding: 0;
+
+  font-size: 25px;
+
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.admin-form {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.admin-form input {
+  padding: 12px;
+
+  color: white;
+  background: rgba(0, 0, 0, 0.3);
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+}
+
+.danger {
+  margin-top: 20px;
+  background: rgba(255, 70, 70, 0.15);
+  color: #ff8585;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2000;
+
+  padding: 14px 18px;
+
+  background: #171222;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* =========================
+   MOBIL
+========================= */
+
+@media (max-width: 1000px) {
+
+  #products {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 90px 0;
+  }
+
+  .hero-card {
+    max-width: 500px;
+  }
+
+  .order-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+
+  .topbar {
+    padding: 14px 5%;
+  }
+
+  .brand {
+    font-size: 19px;
+  }
+
+  nav a {
+    display: none;
+  }
+
+  .hero {
+    padding: 65px 0;
+  }
+
+  h1 {
+    font-size: 46px;
+  }
+
+  .hero .lead {
+    font-size: 16px;
+  }
+
+  .section {
+    padding: 55px 0;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  #search {
+    width: 100%;
+  }
+
   #products {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
 
-  .product,
-  .product-card,
-  .card {
-    padding: 10px;
+  .product {
+    padding: 11px;
+    border-radius: 14px;
   }
 
-  .product img,
-  .product-card img,
-  .card img {
-    height: 130px;
+  .product img {
+    height: 150px;
+    margin-bottom: 10px;
   }
+
+  .product h3 {
+    min-height: 42px;
+    font-size: 14px;
+  }
+
+  .product button {
+    padding: 9px 6px;
+    font-size: 12px;
+  }
+
+  .hero-card {
+    grid-template-columns: 1fr 1fr;
+    padding: 20px;
+  }
+
+}
+
+@media (max-width: 400px) {
+
+  #products {
+    grid-template-columns: 1fr;
+  }
+
+  .product img {
+    height: 200px;
+  }
+
+  .hero-card {
+    grid-template-columns: 1fr;
+  }
+
 }
