@@ -50,180 +50,204 @@ const DEFAULT = [
   {id:49, name:"Tecno Spark 8", code:"VP-049", price:0, qty:1}
 ];
 
-let products = JSON.parse(localStorage.getItem("vp_products") || "null") || DEFAULT;
-let cart = JSON.parse(localStorage.getItem("vp_cart") || "[]");
+let products =
+  JSON.parse(localStorage.getItem("vp_products") || "null") || DEFAULT;
+
+let cart =
+  JSON.parse(localStorage.getItem("vp_cart") || "[]");
+
 
 function qs(selector) {
   return document.querySelector(selector);
 }
+
 
 function save() {
   localStorage.setItem("vp_products", JSON.stringify(products));
   localStorage.setItem("vp_cart", JSON.stringify(cart));
 }
 
+
 function render() {
-  const search = (qs("#search")?.value || "").toLowerCase().trim();
+
+  const search =
+    (qs("#search")?.value || "")
+      .toLowerCase()
+      .trim();
 
   const list = products.filter(p =>
     p.name.toLowerCase().includes(search) ||
     p.code.toLowerCase().includes(search)
   );
 
+
   const productsEl = qs("#products");
 
+
   if (productsEl) {
+
     productsEl.innerHTML = list.map(p => `
+
       <article class="product">
+
         <h3>${p.name}</h3>
-        <div class="code">${p.code}</div>
-        <div class="price">${p.price > 0 ? p.price.toFixed(2) + " €" : "Cena na vyžiadanie"}</div>
-        <div class="stock">Skladom: ${p.qty} ks</div>
-        <button onclick="add(${p.id})">Pridať do objednávky</button>
+
+        <div class="code">
+          ${p.code}
+        </div>
+
+        <div class="price">
+          ${p.price > 0
+            ? p.price.toFixed(2) + " €"
+            : "Cena na vyžiadanie"}
+        </div>
+
+        <div class="stock">
+          Skladom: ${p.qty} ks
+        </div>
+
+        <button onclick="add(${p.id})">
+          Pridať do objednávky
+        </button>
+
       </article>
+
     `).join("");
+
   }
 
+
   const stockCount = qs("#stockCount");
-  if (stockCount) stockCount.textContent = products.reduce((sum, p) => sum + p.qty, 0);
+
+  if (stockCount) {
+    stockCount.textContent =
+      products.reduce((sum, p) => sum + p.qty, 0);
+  }
+
 
   const productCount = qs("#productCount");
-  if (productCount) productCount.textContent = products.length;
+
+  if (productCount) {
+    productCount.textContent =
+      products.length;
+  }
+
 }
 
-function add(id) {
-  const product = products.find(p => p.id === id);
-  if (!product || product.qty <= 0) return;
 
-  const existing = cart.find(x => x.id === id);
+function add(id) {
+
+  const product =
+    products.find(p => p.id === id);
+
+  if (!product || product.qty <= 0) {
+    return;
+  }
+
+
+  const existing =
+    cart.find(x => x.id === id);
+
 
   if (existing) {
-    existing.amount++;
+
+    if (existing.amount < product.qty) {
+      existing.amount++;
+    }
+
   } else {
+
     cart.push({
       id: product.id,
       name: product.name,
       amount: 1
     });
+
   }
 
+
   save();
+
   renderCart();
 
   alert("Diel bol pridaný do objednávky.");
+
 }
 
+
 function renderCart() {
+
   const cartEl = qs("#cart");
 
-  if (!cartEl) return;
-
-  if (!cart.length) {
-    cartEl.innerHTML = "<p>Objednávka je zatiaľ prázdna.</p>";
+  if (!cartEl) {
     return;
   }
 
+
+  if (!cart.length) {
+
+    cartEl.innerHTML =
+      "<p>Objednávka je zatiaľ prázdna.</p>";
+
+    return;
+  }
+
+
   cartEl.innerHTML = cart.map(item => `
+
     <div class="cart-item">
+
       <strong>${item.name}</strong>
-      <span>${item.amount} ks</span>
-      <button onclick="removeFromCart(${item.id})">Odstrániť</button>
-    </div>
-  `).join("");
-}
 
-function removeFromCart(id) {
-  cart = cart.filter(x => x.id !== id);
-  save();
-  renderCart();
-}
+      <span>
+        ${item.amount} ks
+      </span>
 
-function clearCart() {
-  cart = [];
-  save();
-  renderCart();
-}
-
-function openAdmin() {
-  const admin = qs("#admin");
-  if (admin) admin.classList.add("show");
-}
-
-function closeAdmin() {
-  const admin = qs("#admin");
-  if (admin) admin.classList.remove("show");
-}
-
-function renderAdmin() {
-  const adminList = qs("#adminList");
-
-  if (!adminList) return;
-
-  adminList.innerHTML = products.map(p => `
-    <div class="admin-product">
-      <strong>${p.name}</strong>
-      <span>${p.code}</span>
-
-      <input
-        type="number"
-        min="0"
-        value="${p.qty}"
-        onchange="changeQty(${p.id}, this.value)"
-      >
-
-      <button onclick="removeProduct(${p.id})">
+      <button onclick="removeFromCart(${item.id})">
         Odstrániť
       </button>
+
     </div>
+
   `).join("");
+
 }
 
-function changeQty(id, value) {
-  const product = products.find(p => p.id === id);
 
-  if (!product) return;
+function removeFromCart(id) {
 
-  product.qty = Math.max(0, Number(value) || 0);
+  cart =
+    cart.filter(item => item.id !== id);
 
   save();
-  render();
-  renderAdmin();
+
+  renderCart();
+
 }
 
-function removeProduct(id) {
-  if (!confirm("Naozaj chcete odstrániť tento diel?")) return;
 
-  products = products.filter(p => p.id !== id);
+function clearCart() {
+
+  cart = [];
 
   save();
-  render();
-  renderAdmin();
+
+  renderCart();
+
 }
 
-function addProduct(name, code, price, qty) {
-  if (!name.trim()) return;
-
-  products.push({
-    id: Date.now(),
-    name: name.trim(),
-    code: code.trim(),
-    price: Number(price) || 0,
-    qty: Number(qty) || 0
-  });
-
-  save();
-  render();
-  renderAdmin();
-}
 
 document.addEventListener("DOMContentLoaded", () => {
+
   render();
+
   renderCart();
-  renderAdmin();
+
 
   const search = qs("#search");
 
   if (search) {
     search.addEventListener("input", render);
   }
+
 });
