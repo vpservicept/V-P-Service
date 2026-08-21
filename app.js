@@ -70,8 +70,82 @@ function save() {
 
 
 /* =========================================
+   OBRÁZKY
+========================================= */
+
+/*
+  Väčšina obrázkov má rovnaký názov ako telefón.
+  Kód automaticky skúsi JPG aj PNG.
+*/
+
+function getImageCandidates(product) {
+
+  const name = product.name;
+
+  const candidates = [];
+
+
+  /*
+    Špeciálne názvy súborov,
+    ktoré sa môžu líšiť od názvu produktu.
+  */
+
+  if (name === "Huawei Y5-2") {
+
+    candidates.push("Huawei Y5 II.png");
+    candidates.push("Huawei Y5 II.jpg");
+    candidates.push("Huawei Y5-2.jpg");
+    candidates.push("Huawei Y5-2.png");
+
+  } else {
+
+    candidates.push(name + ".jpg");
+    candidates.push(name + ".png");
+
+  }
+
+
+  return candidates;
+}
+
+
+function setNextImage(image) {
+
+  const candidates =
+    JSON.parse(
+      image.dataset.candidates
+    );
+
+
+  let index =
+    Number(image.dataset.imageIndex || 0);
+
+
+  index++;
+
+
+  if (index >= candidates.length) {
+
+    /*
+      Ak obrázok neexistuje,
+      schováme iba obrázok.
+      Produkt samotný zostane.
+    */
+
+    image.style.display = "none";
+
+    return;
+  }
+
+
+  image.dataset.imageIndex = index;
+
+  image.src = candidates[index];
+}
+
+
+/* =========================================
    VYHĽADÁVANIE
-   HĽADÁ SA IBA V NÁZVE SÚČIASTKY
 ========================================= */
 
 function findProducts(searchText) {
@@ -82,29 +156,18 @@ function findProducts(searchText) {
       .trim();
 
 
-  /*
-    Ak používateľ nič nezadal,
-    zobrazíme celý sklad.
-  */
-
   if (search === "") {
     return products;
   }
 
 
   /*
-    Hľadáme IBA v názve produktu.
+    Hľadáme podľa NÁZVU súčiastky.
 
-    Príklad:
-    "moto" nájde:
-    Moto E2
-    Moto E7 Plus
-    Moto E7 Power
-    Moto E13
-    Moto E20
-    Moto G14
-
-    Nenájde Huawei, Samsung, Redmi atď.
+    Moto → iba Moto
+    Samsung → iba Samsung
+    Huawei → iba Huawei
+    Redmi → iba Redmi
   */
 
   return products.filter(product => {
@@ -164,53 +227,75 @@ function renderProducts(list) {
   }
 
 
-  /* VÝSLEDKY */
+  /* PRODUKTY S OBRÁZKAMI */
 
   productsEl.innerHTML =
-    list.map(product => `
+    list.map(product => {
 
-      <article class="product">
+      const candidates =
+        getImageCandidates(product);
 
-        <h3>
-          ${product.name}
-        </h3>
 
-        <div class="code">
-          ${product.code}
-        </div>
+      return `
 
-        <div class="price">
+        <article class="product">
 
-          ${
-            product.price > 0
-              ? Number(product.price).toFixed(2) + " €"
-              : "Cena na vyžiadanie"
-          }
+          <img
+            src="${candidates[0]}"
+            alt="${product.name}"
+            class="product-image"
+            data-candidates='${JSON.stringify(candidates)}'
+            data-image-index="0"
+            onerror="setNextImage(this)"
+          >
 
-        </div>
 
-        <div class="stock">
+          <h3>
+            ${product.name}
+          </h3>
 
-          Skladom:
-          ${product.qty}
-          ks
 
-        </div>
+          <div class="code">
+            ${product.code}
+          </div>
 
-        <button
-          onclick="add(${product.id})"
-        >
-          Pridať do objednávky
-        </button>
 
-      </article>
+          <div class="price">
 
-    `).join("");
+            ${
+              Number(product.price) > 0
+                ? Number(product.price).toFixed(2) + " €"
+                : "Cena na vyžiadanie"
+            }
+
+          </div>
+
+
+          <div class="stock">
+
+            Skladom:
+            ${product.qty}
+            ks
+
+          </div>
+
+
+          <button
+            onclick="add(${product.id})"
+          >
+            Pridať do objednávky
+          </button>
+
+        </article>
+
+      `;
+
+    }).join("");
 }
 
 
 /* =========================================
-   VYHĽADAŤ
+   VYHĽADÁVANIE
 ========================================= */
 
 function doSearch(value) {
@@ -364,7 +449,8 @@ document.addEventListener(
   () => {
 
     /*
-      Na začiatku zobrazíme celý sklad.
+      Na začiatku zobrazíme celý sklad
+      AJ S OBRÁZKAMI.
     */
 
     renderProducts(products);
@@ -467,8 +553,7 @@ document.addEventListener(
 
 
           /*
-            Posunieme stránku
-            priamo na výsledky.
+            Presunieme stránku na výsledky.
           */
 
           const sklad =
