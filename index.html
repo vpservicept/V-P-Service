@@ -1,82 +1,125 @@
 <!DOCTYPE html>
 <html lang="sk">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>V&P Service | Sklad náhradných dielov</title>
 
-  <link rel="stylesheet" href="style.css">
+  <!-- DÔLEŽITÉ: súbor sa volá styles.css -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-  <!-- =========================
+  <!-- =====================================================
        HORNÁ LIŠTA
-  ========================== -->
+  ====================================================== -->
+
   <header class="topbar">
 
+    <!-- LOGO + NÁZOV -->
     <div class="brand">
-      <img src="logo.jpg" alt="V&P Service logo">
+
+      <img
+        id="logo"
+        src="logo.jpg"
+        alt="V&P Service logo"
+      >
+
       <span>V&P Service</span>
+
     </div>
 
-    <form id="searchForm" class="top-search">
+
+    <!-- VYHĽADÁVANIE -->
+    <form
+      id="searchForm"
+      class="top-search"
+      onsubmit="return false;"
+    >
+
       <input
-        id="searchInput"
+        id="search"
         type="text"
         placeholder="Vyhľadávať súčiastku, model alebo kód..."
         autocomplete="off"
       >
-      <button type="submit">Hľadať</button>
+
+      <button
+        id="searchButton"
+        type="button"
+      >
+        Hľadať
+      </button>
+
     </form>
 
-    <!-- TRI ČIARKY -->
+
+    <!-- TRI VODOROVNÉ ČIARKY -->
     <button
       id="menuButton"
-      class="menu-button"
+      class="menu-btn"
       type="button"
       aria-label="Otvoriť menu"
     >
+
       <span></span>
       <span></span>
       <span></span>
+
     </button>
+
+
+    <!-- ROZBALOVACIE MENU -->
+    <div
+      id="mobileMenu"
+      class="menu"
+    >
+
+      <a href="#sklad">
+        📦 Sklad
+      </a>
+
+      <a href="#objednavka">
+        🛒 Objednávka
+      </a>
+
+      <a href="#administracia">
+        ⚙️ Administrácia
+      </a>
+
+      <a href="#kontakt">
+        📞 Kontakt
+      </a>
+
+    </div>
 
   </header>
 
 
-  <!-- =========================
-       MENU
-  ========================== -->
-  <div id="menuPanel" class="menu-panel">
 
-    <a href="#sklad" id="menuSklad">📦 Sklad</a>
-
-    <a href="#objednavka" id="menuObjednavka">🛒 Objednávka</a>
-
-    <a href="#administracia" id="menuAdministracia">
-      ⚙️ Administrácia
-    </a>
-
-    <a href="#kontakt" id="menuKontakt">📞 Kontakt</a>
-
-  </div>
-
-
-  <!-- =========================
+  <!-- =====================================================
        HLAVNÝ OBSAH
-  ========================== -->
+  ====================================================== -->
+
   <main>
 
-    <!-- HERO -->
+
+    <!-- =================================================
+         HERO
+    ================================================== -->
+
     <section class="hero">
 
       <div class="hero-content">
 
+
+        <!-- ĽAVÁ ČASŤ -->
         <div class="hero-text">
 
-          <div class="small-title">
+          <div class="eyebrow">
             V&P SERVICE
           </div>
 
@@ -85,19 +128,22 @@
             skladom.
           </h1>
 
-          <p>
+          <p class="lead">
             Pozrite si aktuálne dostupné súčiastky
             a vytvorte objednávku jednoducho online.
           </p>
 
-          <a href="#sklad" class="hero-button">
+          <a
+            href="#sklad"
+            class="btn"
+          >
             Pozrieť sklad
           </a>
 
         </div>
 
 
-        <!-- VEĽKÉ LOGO V STREDE -->
+        <!-- STREDNÉ LOGO -->
         <div class="hero-logo">
 
           <img
@@ -108,35 +154,37 @@
         </div>
 
 
-        <!-- ŠTATISTIKY -->
-        <div class="stats">
+        <!-- ŠTATISTIKY VPRAVO -->
+        <div class="hero-card">
 
-          <div class="stat-row">
 
-            <div
-              id="onlineNumber"
-              class="stat-number"
-            >
+          <!-- ONLINE NÁVŠTEVNÍCI -->
+          <div class="stat">
+
+            <strong id="onlineNumber">
               10
-            </div>
+            </strong>
 
-            <div class="stat-text">
+            <span>
               Práve návštevníkov online
-            </div>
+            </span>
 
           </div>
 
-          <div class="stat-line"></div>
 
-          <div class="stat-row">
+          <div class="stat-divider"></div>
 
-            <div class="stat-number">
+
+          <!-- SKLAD -->
+          <div class="stat">
+
+            <strong id="stockCount">
               57
-            </div>
+            </strong>
 
-            <div class="stat-text">
+            <span>
               ks aktuálne skladom
-            </div>
+            </span>
 
           </div>
 
@@ -147,41 +195,63 @@
     </section>
 
 
-    <!-- =========================
-         SKLAD
-    ========================== -->
-    <section id="sklad" class="stock-section">
 
-      <div class="section-label">
-        SKLAD
+    <!-- =================================================
+         SKLAD
+    ================================================== -->
+
+    <section
+      id="sklad"
+      class="section"
+    >
+
+      <div class="section-head">
+
+        <div>
+
+          <div class="eyebrow">
+            SKLAD
+          </div>
+
+          <h2>
+            Dostupné súčiastky
+          </h2>
+
+        </div>
+
       </div>
 
-      <h2>
-        Dostupné súčiastky
-      </h2>
 
+      <!-- INFORMÁCIA O VYHĽADÁVANÍ -->
       <div
         id="searchInfo"
         class="search-info"
       ></div>
 
+
+      <!--
+        SEM JAVASCRIPT AUTOMATICKY VLOŽÍ
+        VŠETKY SÚČIASTKY AJ S OBRÁZKAMI
+      -->
       <div
         id="products"
-        class="products"
+        class="grid"
       ></div>
 
     </section>
 
 
-    <!-- =========================
+
+    <!-- =================================================
          OBJEDNÁVKA
-    ========================== -->
+    ================================================== -->
+
     <section
       id="objednavka"
-      class="simple-section"
+      class="section"
     >
 
-      <div class="section-label">
+      <div class="eyebrow">
         OBJEDNÁVKA
       </div>
 
@@ -190,23 +260,27 @@
       </h2>
 
       <div id="cart">
+
         <p>
-          Zatiaľ nemáte žiadnu súčiastku v objednávke.
+          Objednávka je zatiaľ prázdna.
         </p>
+
       </div>
 
     </section>
 
 
-    <!-- =========================
+
+    <!-- =================================================
          ADMINISTRÁCIA
-    ========================== -->
+    ================================================== -->
+
     <section
       id="administracia"
-      class="simple-section"
+      class="section"
     >
 
-      <div class="section-label">
+      <div class="eyebrow">
         ADMINISTRÁCIA
       </div>
 
@@ -215,21 +289,23 @@
       </h2>
 
       <p>
-        Administrácia skladu.
+        Správa skladu a súčiastok.
       </p>
 
     </section>
 
 
-    <!-- =========================
+
+    <!-- =================================================
          KONTAKT
-    ========================== -->
+    ================================================== -->
+
     <section
       id="kontakt"
-      class="simple-section"
+      class="section contact-section"
     >
 
-      <div class="section-label">
+      <div class="eyebrow">
         KONTAKT
       </div>
 
@@ -241,19 +317,23 @@
         V&P Service
       </p>
 
-      <p>
+      <p class="muted">
         Kontaktujte nás pre viac informácií.
       </p>
 
     </section>
 
+
   </main>
 
 
-  <!-- =========================
+
+  <!-- =====================================================
        JAVASCRIPT
-  ========================== -->
+  ====================================================== -->
+
   <script src="app.js"></script>
 
 </body>
+
 </html>
