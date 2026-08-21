@@ -1,4 +1,18 @@
+/* =========================================================
+   V&P SERVICE
+   SKLAD NÁHRADNÝCH DIELOV
+   UPRAVENÁ VERZIA S KATEGÓRIAMI
+
+   Pôvodných 49 položiek a obrázky zachované.
+========================================================= */
+
+
+/* =========================
+   PÔVODNÉ PRODUKTY
+========================= */
+
 const DEFAULT = [
+
   {id:1, name:"Alcatel 5028", code:"VP-001", price:0, qty:1},
   {id:2, name:"Honor 8A", code:"VP-002", price:0, qty:1},
   {id:3, name:"Honor X6A", code:"VP-003", price:0, qty:1},
@@ -48,158 +62,450 @@ const DEFAULT = [
   {id:47, name:"Samsung Galaxy S6", code:"VP-047", price:0, qty:1},
   {id:48, name:"Samsung Galaxy S10", code:"VP-048", price:0, qty:1},
   {id:49, name:"Tecno Spark 8", code:"VP-049", price:0, qty:1}
+
 ];
 
 
-/* =========================
+/* =========================================================
+   KATEGÓRIE
+========================================================= */
+
+const CATEGORIES = [
+
+  "Všetky súčiastky",
+
+  "Matičné dosky",
+
+  "Batérie",
+
+  "Displeje",
+
+  "Odtlačky prstov",
+
+  "Konektory",
+
+  "Kamery",
+
+  "Reproduktory",
+
+  "Kryty",
+
+  "Flex káble"
+
+];
+
+
+/* =========================================================
    PRODUKTY A OBJEDNÁVKA
-========================= */
+========================================================= */
 
-let products =
-  JSON.parse(localStorage.getItem("vp_products") || "null") || DEFAULT;
-
-let cart =
-  JSON.parse(localStorage.getItem("vp_cart") || "[]");
-
-
-function qs(selector) {
-  return document.querySelector(selector);
-}
-
-
-function save() {
-  localStorage.setItem("vp_products", JSON.stringify(products));
-  localStorage.setItem("vp_cart", JSON.stringify(cart));
-}
-
-
-/* =========================
-   OBRÁZKY
-========================= */
-
-const PRODUCT_IMAGES = {
-
-  "Alcatel 5028": "Alcatel 5028.jpg",
-
-  "Honor 8A": "Honor 8A.jpg",
-
-  "Honor X6A": "Honor X6A.jpg",
-
-  "Huawei Nova 8i": "Huawei Nova 8i.jpg",
-
-  "Huawei P20 Lite": "Huawei P20 Lite.png",
-
-  "Huawei P20": "Huawei P20.jpg",
-
-  "Huawei P30 Lite": "Huawei P30 Lite.png",
-
-  "Huawei P30": "Huawei P30.jpg",
-
-  "Huawei P Smart 2019": "Huawei PSmart 2019.jpg",
-
-  "Huawei P Smart 2021": "Huawei PSmart 2021.jpg",
-
-  "Huawei Y5 II": "Huawei Y5 II.png",
-
-  "Huawei Y7 Prime": "Huawei Y7 Prime.jpg",
-
-  "Infinix Smart 8": "Infinix Smart 8.png",
-
-  "Moto E13": "Moto E13.jpg",
-
-  "Moto E7 Plus": "Moto E7 Plus.png",
-
-  "Moto E7 Power": "Moto E7 Power.jpg",
-
-  "Redmi 9C": "Redmi 9C.png",
-
-  "Redmi Note 11,11S": "Redmi Note 11,11s.jpg",
-
-  "Samsung Galaxy A3": "Samsung Galaxy A3.png",
-
-  "Samsung Galaxy A5": "Samsung Galaxy A5.jpg",
-
-  "Samsung Galaxy A6": "Samsung Galaxy A6.png",
-
-  "Samsung Galaxy A8": "Samsung Galaxy A8.jpg",
-
-  "Samsung Galaxy A9": "Samsung Galaxy A9.jpg"
-};
+let savedProducts = null;
 
 
 /*
-  Pre ostatné modely skúsi automaticky
-  nájsť obrázok podľa názvu.
+  Pokúsime sa načítať existujúci sklad.
 */
 
-function getProductImage(product) {
+try {
 
-  if (PRODUCT_IMAGES[product.name]) {
-    return PRODUCT_IMAGES[product.name];
+  savedProducts =
+    JSON.parse(
+      localStorage.getItem("vp_products")
+    );
+
+} catch (error) {
+
+  savedProducts = null;
+
+}
+
+
+/*
+  Ak je uložený sklad prázdny alebo poškodený,
+  použijeme pôvodných 49 položiek.
+*/
+
+let products =
+  Array.isArray(savedProducts) &&
+  savedProducts.length > 0
+    ? savedProducts
+    : DEFAULT.map(p => ({ ...p }));
+
+
+/*
+  EXISTUJÚCE PRODUKTY:
+
+  Ak ešte nemajú kategóriu,
+  automaticky ich zaradíme do
+  Matičné dosky.
+
+  Tým pádom všetkých pôvodných
+  49 kusov zostane v tejto kategórii.
+*/
+
+products = products.map(function(product) {
+
+  return {
+
+    ...product,
+
+    category:
+      product.category ||
+      "Matičné dosky"
+
+  };
+
+});
+
+
+let cart = [];
+
+
+try {
+
+  const savedCart =
+    JSON.parse(
+      localStorage.getItem("vp_cart")
+    );
+
+  if (Array.isArray(savedCart)) {
+    cart = savedCart;
   }
 
-  const clean = product.name
-    .replace(/–/g, "")
-    .replace(/[\/\\:*?"<>|]/g, "")
-    .trim();
+} catch (error) {
 
-  const candidates = [
-    clean + ".jpg",
-    clean + ".png",
-    clean.replace(/ /g, "") + ".jpg",
-    clean.replace(/ /g, "") + ".png"
-  ];
+  cart = [];
 
-  /*
-    Obrázok sa zobrazí ako prvý kandidát.
-    Ak daný súbor neexistuje, prehliadač ho jednoducho
-    nezobrazí.
-  */
+}
 
-  return candidates[0];
+
+/*
+  Uložíme produkty s kategóriami.
+*/
+
+localStorage.setItem(
+  "vp_products",
+  JSON.stringify(products)
+);
+
+
+/* =========================
+   POMOCNÁ FUNKCIA
+========================= */
+
+function qs(selector) {
+
+  return document.querySelector(selector);
+
 }
 
 
 /* =========================
-   VYHĽADÁVANIE
+   ULOŽENIE
 ========================= */
+
+function save() {
+
+  localStorage.setItem(
+    "vp_products",
+    JSON.stringify(products)
+  );
+
+  localStorage.setItem(
+    "vp_cart",
+    JSON.stringify(cart)
+  );
+
+}
+
+
+/* =========================================================
+   OBRÁZKY
+   TOTO JE TVOJ PÔVODNÝ ZOZNAM
+========================================================= */
+
+const PRODUCT_IMAGES = {
+
+  "Alcatel 5028":
+    "Alcatel 5028.jpg",
+
+  "Honor 8A":
+    "Honor 8A.jpg",
+
+  "Honor X6A":
+    "Honor X6A.jpg",
+
+  "Huawei Nova 8i":
+    "Huawei Nova 8i.jpg",
+
+  "Huawei P20 Lite":
+    "Huawei P20 Lite.png",
+
+  "Huawei P20":
+    "Huawei P20.jpg",
+
+  "Huawei P30 Lite":
+    "Huawei P30 Lite.png",
+
+  "Huawei P30":
+    "Huawei P30.jpg",
+
+  "Huawei P Smart 2019":
+    "Huawei PSmart 2019.jpg",
+
+  "Huawei P Smart 2021":
+    "Huawei PSmart 2021.jpg",
+
+  "Huawei Y5 II":
+    "Huawei Y5 II.png",
+
+  "Huawei Y7 Prime":
+    "Huawei Y7 Prime.jpg",
+
+  "Infinix Smart 8":
+    "Infinix Smart 8.png",
+
+  "Moto E13":
+    "Moto E13.jpg",
+
+  "Moto E7 Plus":
+    "Moto E7 Plus.png",
+
+  "Moto E7 Power":
+    "Moto E7 Power.jpg",
+
+  "Redmi 9C":
+    "Redmi 9C.png",
+
+  "Redmi Note 11,11S":
+    "Redmi Note 11,11s.jpg",
+
+  "Samsung Galaxy A3":
+    "Samsung Galaxy A3.png",
+
+  "Samsung Galaxy A5":
+    "Samsung Galaxy A5.jpg",
+
+  "Samsung Galaxy A6":
+    "Samsung Galaxy A6.png",
+
+  "Samsung Galaxy A8":
+    "Samsung Galaxy A8.jpg",
+
+  "Samsung Galaxy A9":
+    "Samsung Galaxy A9.jpg"
+
+};
+
+
+/* =========================================================
+   OBRÁZOK PRODUKTU
+========================================================= */
+
+function getProductImage(product) {
+
+  /*
+    Najskôr presne podľa zoznamu obrázkov.
+  */
+
+  if (PRODUCT_IMAGES[product.name]) {
+
+    return PRODUCT_IMAGES[product.name];
+
+  }
+
+
+  /*
+    Potom automatické hľadanie podľa názvu.
+  */
+
+  const clean =
+    product.name
+      .replace(/–/g, "")
+      .replace(/[\/\\:*?"<>|]/g, "")
+      .trim();
+
+
+  const candidates = [
+
+    clean + ".jpg",
+
+    clean + ".png",
+
+    clean.replace(/ /g, "") + ".jpg",
+
+    clean.replace(/ /g, "") + ".png"
+
+  ];
+
+
+  return candidates[0];
+
+}
+
+
+/* =========================================================
+   VYHĽADÁVANIE
+========================================================= */
 
 function getSearchValue() {
 
-  const search = qs("#search");
+  const search =
+    qs("#search");
+
 
   if (!search) {
+
     return "";
+
   }
+
 
   return search.value
     .toLowerCase()
     .trim();
+
 }
 
 
+/* =========================================================
+   AKTUÁLNA KATEGÓRIA
+========================================================= */
+
+let selectedCategory =
+  "Všetky súčiastky";
+
+
+/* =========================================================
+   VYTVORENIE KATEGÓRIÍ
+========================================================= */
+
+function renderCategoryButtons() {
+
+  let container =
+    qs("#categoryFilters");
+
+
+  /*
+    Ak v index.html kontajner nie je,
+    vytvoríme ho automaticky.
+  */
+
+  if (!container) {
+
+    const productsEl =
+      qs("#products");
+
+
+    if (!productsEl) {
+      return;
+    }
+
+
+    container =
+      document.createElement("div");
+
+
+    container.id =
+      "categoryFilters";
+
+
+    productsEl.parentNode.insertBefore(
+      container,
+      productsEl
+    );
+
+  }
+
+
+  container.innerHTML =
+    CATEGORIES.map(function(category) {
+
+      const active =
+        category === selectedCategory
+          ? "active"
+          : "";
+
+
+      return `
+
+        <button
+          type="button"
+          class="category-btn ${active}"
+          data-category="${category}"
+        >
+          ${category}
+        </button>
+
+      `;
+
+    }).join("");
+
+
+  /*
+    Kliknutie na kategóriu.
+  */
+
+  container
+    .querySelectorAll(".category-btn")
+    .forEach(function(button) {
+
+      button.addEventListener(
+        "click",
+        function() {
+
+          selectedCategory =
+            button.dataset.category;
+
+
+          renderCategoryButtons();
+
+          render();
+
+        }
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   VYHĽADÁVANIE PRODUKTOV
+========================================================= */
+
 function searchProducts() {
 
-  const search = getSearchValue();
+  const search =
+    getSearchValue();
+
 
   render(search);
+
 
   const stock =
     document.querySelector("#sklad") ||
     document.querySelector("#products");
 
+
   if (stock) {
+
     stock.scrollIntoView({
+
       behavior: "smooth",
+
       block: "start"
+
     });
+
   }
+
 }
 
 
-/* =========================
+/* =========================================================
    VYKRESLENIE PRODUKTOV
-========================= */
+========================================================= */
 
 function render(searchValue = null) {
 
@@ -209,30 +515,61 @@ function render(searchValue = null) {
       : getSearchValue();
 
 
-  const list = products.filter(p => {
+  /*
+    Najskôr filtrujeme podľa kategórie.
+  */
 
-    if (!search) {
-      return true;
-    }
+  let list =
+    products.filter(function(product) {
 
-    const name =
-      p.name.toLowerCase();
+      if (
+        selectedCategory ===
+        "Všetky súčiastky"
+      ) {
 
-    const code =
-      p.code.toLowerCase();
+        return true;
 
-    /*
-      Moto -> Moto E13, Moto E7 Plus...
-      Samsung -> všetky Samsung Galaxy...
-      Redmi -> všetky Redmi...
-    */
+      }
 
-    return (
-      name.includes(search) ||
-      code.includes(search)
-    );
 
-  });
+      return (
+        product.category ===
+        selectedCategory
+      );
+
+    });
+
+
+  /*
+    Potom filtrujeme podľa vyhľadávania.
+  */
+
+  if (search) {
+
+    list =
+      list.filter(function(product) {
+
+        const name =
+          product.name
+            .toLowerCase();
+
+
+        const code =
+          product.code
+            .toLowerCase();
+
+
+        return (
+
+          name.includes(search) ||
+
+          code.includes(search)
+
+        );
+
+      });
+
+  }
 
 
   const productsEl =
@@ -241,92 +578,147 @@ function render(searchValue = null) {
 
   if (productsEl) {
 
+
+    /*
+      Žiadny výsledok.
+    */
+
     if (!list.length) {
 
       productsEl.innerHTML = `
+
         <div class="no-results">
-          <h3>Žiadna súčiastka sa nenašla</h3>
-          <p>Skús zadať iný názov alebo kód.</p>
+
+          <h3>
+            Žiadna súčiastka sa nenašla
+          </h3>
+
+          <p>
+            V tejto kategórii zatiaľ
+            nie sú žiadne súčiastky.
+          </p>
+
         </div>
+
       `;
 
-    } else {
+    }
 
-      productsEl.innerHTML = list.map(p => {
 
-        const image =
-          getProductImage(p);
+    /*
+      Produkty.
+    */
 
-        return `
+    else {
 
-          <article class="product product-card">
+      productsEl.innerHTML =
+        list.map(function(product) {
 
-            <div class="product-image">
+          const image =
+            getProductImage(product);
 
-              <img
-                src="${encodeURI(image)}"
-                alt="${p.name}"
-                onerror="this.style.display='none';"
+
+          return `
+
+            <article
+              class="product product-card"
+            >
+
+              <div class="product-image">
+
+                <img
+                  src="${encodeURI(image)}"
+                  alt="${product.name}"
+                  onerror="this.style.display='none';"
+                >
+
+              </div>
+
+
+              <h3>
+                ${product.name}
+              </h3>
+
+
+              <div class="code">
+                ${product.code}
+              </div>
+
+
+              <div class="price">
+
+                ${
+                  product.price > 0
+
+                    ? product.price.toFixed(2) + " €"
+
+                    : "Cena na vyžiadanie"
+                }
+
+              </div>
+
+
+              <div class="stock">
+
+                Skladom:
+                ${product.qty}
+                ks
+
+              </div>
+
+
+              <button
+                onclick="add(${product.id})"
+                ${product.qty <= 0 ? "disabled" : ""}
               >
 
-            </div>
+                Pridať do košíku
 
-            <h3>${p.name}</h3>
+              </button>
 
-            <div class="code">
-              ${p.code}
-            </div>
 
-            <div class="price">
+            </article>
 
-              ${
-                p.price > 0
-                  ? p.price.toFixed(2) + " €"
-                  : "Cena na vyžiadanie"
-              }
+          `;
 
-            </div>
-
-            <div class="stock">
-
-              Skladom: ${p.qty} ks
-
-            </div>
-
-            <button
-              onclick="add(${p.id})"
-              ${p.qty <= 0 ? "disabled" : ""}
-            >
-              Pridať do objednávky
-            </button>
-
-          </article>
-
-        `;
-
-      }).join("");
+        }).join("");
 
     }
 
   }
 
 
+  /*
+    Celkový počet kusov skladom.
+  */
+
   const stockCount =
     qs("#stockCount");
+
 
   if (stockCount) {
 
     stockCount.textContent =
       products.reduce(
-        (sum, p) => sum + p.qty,
+        function(sum, product) {
+
+          return sum +
+            Number(product.qty || 0);
+
+        },
         0
       );
 
   }
 
 
+  /*
+    Počet produktov.
+  */
+
   const productCount =
     qs("#productCount");
+
 
   if (productCount) {
 
@@ -335,42 +727,93 @@ function render(searchValue = null) {
 
   }
 
+
+  /*
+    Informácia o vyhľadávaní.
+  */
+
+  const searchInfo =
+    qs("#searchInfo");
+
+
+  if (searchInfo) {
+
+    if (search) {
+
+      searchInfo.textContent =
+        `Vyhľadávanie: ${search}`;
+
+    }
+
+    else {
+
+      searchInfo.textContent =
+        "";
+
+    }
+
+  }
+
 }
 
 
-/* =========================
-   PRIDANIE DO OBJEDNÁVKY
-========================= */
+/* =========================================================
+   PRIDANIE DO KOŠÍKA
+========================================================= */
 
 function add(id) {
 
   const product =
-    products.find(p => p.id === id);
+    products.find(function(p) {
 
-  if (!product || product.qty <= 0) {
+      return p.id === id;
+
+    });
+
+
+  if (
+    !product ||
+    Number(product.qty) <= 0
+  ) {
+
     return;
+
   }
 
 
   const existing =
-    cart.find(x => x.id === id);
+    cart.find(function(item) {
+
+      return item.id === id;
+
+    });
 
 
   if (existing) {
 
-    if (existing.amount < product.qty) {
+    if (
+      existing.amount <
+      product.qty
+    ) {
+
       existing.amount++;
+
     }
 
-  } else {
+  }
+
+  else {
 
     cart.push({
 
-      id: product.id,
+      id:
+        product.id,
 
-      name: product.name,
+      name:
+        product.name,
 
-      amount: 1
+      amount:
+        1
 
     });
 
@@ -381,31 +824,44 @@ function add(id) {
 
   renderCart();
 
+  updateCartCount();
+
+
   alert(
-    "Diel bol pridaný do objednávky."
+    "Diel bol pridaný do košíka."
   );
 
 }
 
 
-/* =========================
-   OBJEDNÁVKA
-========================= */
+/* =========================================================
+   VYKRESLENIE KOŠÍKA
+========================================================= */
 
 function renderCart() {
 
   const cartEl =
     qs("#cart");
 
+
   if (!cartEl) {
+
     return;
+
   }
 
 
   if (!cart.length) {
 
-    cartEl.innerHTML =
-      "<p>Objednávka je zatiaľ prázdna.</p>";
+    cartEl.innerHTML = `
+
+      <p>
+        Košík je zatiaľ prázdny.
+      </p>
+
+    `;
+
+    updateCartCount();
 
     return;
 
@@ -413,44 +869,68 @@ function renderCart() {
 
 
   cartEl.innerHTML =
-    cart.map(item => `
+    cart.map(function(item) {
 
-      <div class="cart-item">
+      return `
 
-        <strong>
-          ${item.name}
-        </strong>
+        <div class="cart-item">
 
-        <span>
-          ${item.amount} ks
-        </span>
+          <strong>
+            ${item.name}
+          </strong>
 
-        <button
-          onclick="removeFromCart(${item.id})"
-        >
-          Odstrániť
-        </button>
 
-      </div>
+          <span>
+            ${item.amount} ks
+          </span>
 
-    `).join("");
+
+          <button
+            onclick="removeFromCart(${item.id})"
+          >
+
+            Odstrániť
+
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+
+  updateCartCount();
 
 }
 
 
+/* =========================================================
+   ODSTRÁNENIE Z KOŠÍKA
+========================================================= */
+
 function removeFromCart(id) {
 
   cart =
-    cart.filter(
-      item => item.id !== id
-    );
+    cart.filter(function(item) {
+
+      return item.id !== id;
+
+    });
+
 
   save();
 
   renderCart();
 
+  updateCartCount();
+
 }
 
+
+/* =========================================================
+   VYPRÁZDNENIE KOŠÍKA
+========================================================= */
 
 function clearCart() {
 
@@ -460,58 +940,132 @@ function clearCart() {
 
   renderCart();
 
+  updateCartCount();
+
 }
 
 
-/* =========================
-   HAMBURGER – IBA 3 ČIARKY
-========================= */
+/* =========================================================
+   POČÍTADLO KOŠÍKA
+========================================================= */
+
+function updateCartCount() {
+
+  const cartCount =
+    qs("#cartCount");
+
+
+  if (!cartCount) {
+
+    return;
+
+  }
+
+
+  const total =
+    cart.reduce(
+      function(sum, item) {
+
+        return sum +
+          Number(item.amount || 0);
+
+      },
+      0
+    );
+
+
+  cartCount.textContent =
+    total;
+
+}
+
+
+/* =========================================================
+   HAMBURGER MENU
+========================================================= */
 
 function setupMenu() {
 
   const menuButton =
-    document.querySelector(
-      "#menuButton"
-    );
+    qs("#menuButton");
+
 
   const menu =
-    document.querySelector(
-      "#mobileMenu"
-    );
+    qs("#mobileMenu");
 
 
-  if (!menuButton || !menu) {
+  if (
+    !menuButton ||
+    !menu
+  ) {
+
     return;
+
   }
 
 
   menuButton.addEventListener(
     "click",
-    function () {
+    function(event) {
+
+      event.stopPropagation();
+
+
+      menu.classList.toggle(
+        "open"
+      );
+
 
       menu.classList.toggle(
         "show"
+      );
+
+
+      const isOpen =
+        menu.classList.contains(
+          "open"
+        );
+
+
+      menuButton.setAttribute(
+        "aria-expanded",
+        isOpen
+          ? "true"
+          : "false"
       );
 
     }
   );
 
 
-  /*
-    Kliknutie mimo menu ho zatvorí.
-  */
-
   document.addEventListener(
     "click",
-    function (event) {
+    function(event) {
 
       if (
-        !menu.contains(event.target) &&
-        !menuButton.contains(event.target)
+
+        !menu.contains(
+          event.target
+        ) &&
+
+        !menuButton.contains(
+          event.target
+        )
+
       ) {
 
         menu.classList.remove(
+          "open"
+        );
+
+        menu.classList.remove(
           "show"
+        );
+
+
+        menuButton.setAttribute(
+          "aria-expanded",
+          "false"
         );
 
       }
@@ -519,60 +1073,56 @@ function setupMenu() {
     }
   );
 
-}
+
+  menu
+    .querySelectorAll("a")
+    .forEach(function(link) {
+
+      link.addEventListener(
+        "click",
+        function() {
+
+          menu.classList.remove(
+            "open"
+          );
+
+          menu.classList.remove(
+            "show"
+          );
 
 
-/* =========================
-   ODSTRÁNENIE DRUHÉHO
-   VYHĽADÁVANIA
-========================= */
+          menuButton.setAttribute(
+            "aria-expanded",
+            "false"
+          );
 
-function removeSecondSearch() {
+        }
+      );
 
-  /*
-    Ak má stránka druhé vyhľadávanie
-    pri produktoch, odstránime ho.
-  */
-
-  const possibleSearches = [
-    "#stockSearch",
-    "#productSearch",
-    "#searchProducts",
-    ".stock-search"
-  ];
-
-  possibleSearches.forEach(selector => {
-
-    const el =
-      document.querySelector(selector);
-
-    if (el) {
-      el.remove();
-    }
-
-  });
+    });
 
 }
 
 
-/* =========================
-   HORNÉ VYHĽADÁVANIE
-========================= */
+/* =========================================================
+   VYHĽADÁVANIE
+========================================================= */
 
 function setupSearch() {
 
   const search =
     qs("#search");
 
+
   if (!search) {
+
     return;
+
   }
 
 
   const searchButton =
-    document.querySelector(
-      "#searchButton"
-    );
+    qs("#searchButton");
 
 
   if (searchButton) {
@@ -603,14 +1153,13 @@ function setupSearch() {
   );
 
 
+  /*
+    Vyhľadávanie počas písania.
+  */
+
   search.addEventListener(
     "input",
     function() {
-
-      /*
-        Vyhľadávanie funguje okamžite
-        aj počas písania.
-      */
 
       render();
 
@@ -620,50 +1169,153 @@ function setupSearch() {
 }
 
 
-/* =========================
+/* =========================================================
    LOGO
-========================= */
+========================================================= */
 
 function setupLogo() {
 
-  /*
-    Ak existuje obrázok s id logo,
-    použije sa logo.jpg.
-  */
-
   const logo =
-    document.querySelector(
-      "#logo"
-    );
+    qs("#logo");
+
 
   if (logo) {
 
-    logo.src = "logo.jpg";
+    logo.src =
+      "logo.jpg";
 
   }
 
 }
 
 
-/* =========================
-   SPUSTENIE
-========================= */
+/* =========================================================
+   OBNOVENIE ÚDAJOV
+========================================================= */
+
+function restoreProductsIfNeeded() {
+
+  /*
+    Ak by sa niekedy produkty
+    vymazali z localStorage,
+    obnovíme pôvodných 49.
+  */
+
+  if (
+    !Array.isArray(products) ||
+    products.length === 0
+  ) {
+
+    products =
+      DEFAULT.map(function(product) {
+
+        return {
+
+          ...product,
+
+          category:
+            "Matičné dosky"
+
+        };
+
+      });
+
+
+    save();
+
+  }
+
+
+  /*
+    Staršie uložené produkty,
+    ktoré ešte nemali kategóriu,
+    dostanú Matičné dosky.
+  */
+
+  products =
+    products.map(function(product) {
+
+      return {
+
+        ...product,
+
+        category:
+          product.category ||
+          "Matičné dosky"
+
+      };
+
+    });
+
+
+  save();
+
+}
+
+
+/* =========================================================
+   SPUSTENIE STRÁNKY
+========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   function() {
 
+
+    /*
+      Obnova skladu.
+    */
+
+    restoreProductsIfNeeded();
+
+
+    /*
+      Kategórie.
+    */
+
+    renderCategoryButtons();
+
+
+    /*
+      Produkty.
+    */
+
     render();
+
+
+    /*
+      Košík.
+    */
 
     renderCart();
 
+
+    /*
+      Počítadlo košíka.
+    */
+
+    updateCartCount();
+
+
+    /*
+      Menu.
+    */
+
     setupMenu();
+
+
+    /*
+      Vyhľadávanie.
+    */
 
     setupSearch();
 
-    setupLogo();
 
-    removeSecondSearch();
+    /*
+      Logo.
+    */
+
+    setupLogo();
 
   }
 );
