@@ -7,15 +7,15 @@ html {
 }
 
 :root {
-  --gold: #e6b84f;
+  --gold: #e5b63f;
   --gold-light: #ffd86b;
-  --purple: #7b3ff2;
-  --purple-light: #9b5cff;
+  --purple: #8d45f5;
+  --purple-dark: #6d31d5;
   --dark: #08060d;
-  --card: rgba(19, 16, 29, 0.94);
+  --card: rgba(20, 15, 35, 0.9);
   --border: rgba(255, 255, 255, 0.12);
   --muted: #aaa5b5;
-  --green: #45d77b;
+  --green: #42d986;
 }
 
 body {
@@ -34,8 +34,8 @@ body {
 
   background:
     linear-gradient(
-      rgba(5, 3, 10, 0.76),
-      rgba(5, 3, 10, 0.92)
+      rgba(8, 4, 15, 0.72),
+      rgba(8, 4, 15, 0.9)
     ),
     url("pozadie.jpg");
 
@@ -47,140 +47,310 @@ body {
   overflow-x: hidden;
 }
 
-/* ==============================
-   HLAVNÝ OBSAH
-============================== */
-
-main {
-  width: min(1250px, 92%);
-  margin: 0 auto;
-}
-
-.section {
-  padding: 75px 0;
-}
-
-/* ==============================
+/* ==================================================
    HORNÁ LIŠTA
-============================== */
+================================================== */
 
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 3000;
+
+  width: 100%;
+  min-height: 72px;
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
 
-  padding: 14px 5%;
+  padding: 12px 5%;
 
-  background: rgba(7, 5, 12, 0.88);
+  gap: 20px;
+
+  background:
+    rgba(8, 5, 14, 0.96);
 
   border-bottom:
-    1px solid rgba(230, 184, 79, 0.18);
+    1px solid rgba(255, 255, 255, 0.1);
 
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 }
 
 .brand {
-  display: flex;
-  align-items: center;
+  flex-shrink: 0;
 
-  font-size: 23px;
+  color: white;
+
+  font-size: 21px;
   font-weight: 800;
-  letter-spacing: -0.5px;
+
+  white-space: nowrap;
 }
 
 .brand span {
   color: var(--gold);
-  margin-right: 5px;
 }
 
-nav {
+/* ==================================================
+   VYHĽADÁVANIE HORE
+================================================== */
+
+.top-search {
+  flex: 1;
+
+  max-width: 540px;
+
+  margin: 0 auto;
+
   display: flex;
   align-items: center;
+
   gap: 8px;
 }
 
-nav a,
-nav button {
+.top-search input {
+  width: 100%;
+
+  padding: 12px 15px;
+
   color: white;
-  text-decoration: none;
 
-  padding: 10px 15px;
+  background:
+    rgba(255, 255, 255, 0.07);
 
-  border: 0;
-  border-radius: 9px;
+  border:
+    1px solid rgba(255, 255, 255, 0.18);
 
-  background: transparent;
+  border-radius: 10px;
+
+  outline: none;
 
   font-size: 14px;
-  font-weight: 600;
+}
+
+.top-search input::placeholder {
+  color: #aaa5b5;
+}
+
+.top-search input:focus {
+  border-color: var(--gold);
+
+  box-shadow:
+    0 0 0 3px rgba(229, 182, 63, 0.12);
+}
+
+.top-search button {
+  flex-shrink: 0;
+
+  padding: 12px 18px;
+
+  color: #1b1308;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--gold-light),
+      #d9a437
+    );
+
+  border: 0;
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 800;
 
   cursor: pointer;
 }
 
-nav a:hover,
-nav button:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
+/* ==================================================
+   TRI ČIARKY
+================================================== */
 
-/* ==============================
-   HERO
-============================== */
-
-.hero {
+.menu-wrapper {
   position: relative;
 
-  width: min(1250px, 92%);
-  min-height: 600px;
+  flex-shrink: 0;
+
+  margin-left: auto;
+}
+
+.menu-btn {
+  width: 46px;
+  height: 46px;
+
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 5px;
+
+  color: white;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.16);
+
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+.menu-btn:hover {
+  background:
+    rgba(255, 255, 255, 0.1);
+}
+
+.menu-btn span {
+  display: block;
+
+  width: 22px;
+  height: 2px;
+
+  background: white;
+
+  border-radius: 2px;
+}
+
+/* ==================================================
+   ROZBALENÉ MENU
+================================================== */
+
+.main-menu {
+  position: absolute;
+
+  top: 56px;
+  right: 0;
+
+  width: 235px;
+
+  padding: 8px;
+
+  display: block;
+
+  background:
+    rgba(18, 13, 28, 0.99);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.14);
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.55);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(-8px);
+
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s ease;
+
+  pointer-events: none;
+}
+
+.main-menu.open {
+  opacity: 1;
+  visibility: visible;
+
+  transform: translateY(0);
+
+  pointer-events: auto;
+}
+
+.main-menu a,
+.main-menu button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  padding: 13px 14px;
+
+  margin: 2px 0;
+
+  color: white;
+
+  background: transparent;
+
+  border: 0;
+  border-radius: 9px;
+
+  text-decoration: none;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.main-menu a:hover,
+.main-menu button:hover {
+  color: var(--gold-light);
+
+  background:
+    rgba(255, 255, 255, 0.08);
+}
+
+/* ==================================================
+   HLAVNÝ OBSAH
+================================================== */
+
+main {
+  width: min(1200px, 94%);
+  margin: 0 auto;
+}
+
+.section {
+  padding: 70px 0;
+}
+
+/* ==================================================
+   HERO
+================================================== */
+
+.hero {
+  width: min(1200px, 94%);
+  min-height: 560px;
 
   margin: 0 auto;
 
   display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
+
+  grid-template-columns: 1.2fr 0.8fr;
 
   align-items: center;
 
-  gap: 50px;
-
-  overflow: hidden;
+  gap: 40px;
 
   background:
     linear-gradient(
       90deg,
-      rgba(5, 3, 10, 0.88),
-      rgba(5, 3, 10, 0.58),
-      rgba(5, 3, 10, 0.38)
+      rgba(8, 4, 15, 0.62),
+      rgba(8, 4, 15, 0.28)
     ),
     url("pozadie.jpg");
 
   background-size: cover;
   background-position: center 18%;
-  background-repeat: no-repeat;
 
-  border-radius: 0 0 30px 30px;
+  border-radius:
+    0 0 28px 28px;
+
+  overflow: hidden;
 
   box-shadow:
-    0 25px 90px rgba(0, 0, 0, 0.55);
-}
-
-.hero::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  background:
-    radial-gradient(
-      circle at 75% 40%,
-      rgba(230, 184, 79, 0.18),
-      transparent 34%
-    );
-
-  pointer-events: none;
+    0 25px 80px rgba(0, 0, 0, 0.4);
 }
 
 .hero > div {
@@ -189,7 +359,7 @@ nav button:hover {
 }
 
 .hero > div:first-child {
-  padding: 50px 0 50px 45px;
+  padding: 45px;
 }
 
 .eyebrow {
@@ -206,80 +376,78 @@ nav button:hover {
 .hero h1 {
   margin: 0 0 25px;
 
-  font-size: clamp(45px, 6vw, 76px);
+  color: white;
+
+  font-size:
+    clamp(46px, 6vw, 76px);
 
   line-height: 0.98;
 
   letter-spacing: -2px;
 
+  text-align: left;
+
   text-shadow:
-    0 5px 30px rgba(0, 0, 0, 0.7);
+    0 5px 25px rgba(0, 0, 0, 0.55);
 }
 
 .hero .lead {
-  max-width: 600px;
+  max-width: 620px;
 
   margin: 0 0 30px;
 
-  color: #c0bbc8;
+  color: #ddd8e3;
 
-  font-size: 18px;
+  font-size: 17px;
+
   line-height: 1.7;
 }
 
-/* ==============================
-   HERO ŠTATISTIKY
-============================== */
-
 .hero-card {
-  position: relative;
-  z-index: 2;
-
   display: grid;
-  grid-template-columns: 1fr 1fr;
 
-  gap: 15px;
+  grid-template-columns: auto 1fr;
 
-  padding: 28px;
+  gap: 12px 20px;
 
   margin-right: 35px;
+
+  padding: 30px;
 
   background:
     rgba(13, 10, 21, 0.9);
 
   border:
-    1px solid rgba(230, 184, 79, 0.22);
+    1px solid rgba(229, 182, 63, 0.2);
 
   border-radius: 22px;
 
   box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.55),
-    0 0 50px rgba(230, 184, 79, 0.08);
+    0 25px 70px rgba(0, 0, 0, 0.5);
 
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(12px);
 }
 
 .hero-card strong {
-  font-size: 40px;
-
   color: var(--gold-light);
+
+  font-size: 39px;
 }
 
 .hero-card span {
   align-self: center;
 
-  color: #aaa5b5;
+  color: var(--muted);
 
   font-size: 13px;
 }
 
-/* ==============================
+/* ==================================================
    TLAČIDLÁ
-============================== */
+================================================== */
 
 .btn {
   display: inline-flex;
-
   align-items: center;
   justify-content: center;
 
@@ -290,8 +458,8 @@ nav button:hover {
   background:
     linear-gradient(
       135deg,
-      var(--purple-light),
-      var(--purple)
+      var(--purple),
+      var(--purple-dark)
     );
 
   border: 0;
@@ -300,121 +468,72 @@ nav button:hover {
   text-decoration: none;
 
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
 
   cursor: pointer;
 
   box-shadow:
-    0 10px 30px rgba(123, 63, 242, 0.3);
-
-  transition: 0.2s ease;
+    0 10px 30px rgba(141, 69, 245, 0.25);
 }
 
 .btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 
   box-shadow:
-    0 15px 35px rgba(123, 63, 242, 0.45);
+    0 14px 32px rgba(141, 69, 245, 0.35);
 }
 
-button {
-  cursor: pointer;
-
-  border: 0;
-  border-radius: 10px;
-
-  padding: 10px 15px;
-
-  color: white;
-
-  background:
-    rgba(255, 255, 255, 0.1);
-
-  font-size: 14px;
-
-  transition: 0.2s ease;
-}
-
-button:hover {
-  background:
-    rgba(255, 255, 255, 0.18);
-}
-
-/* ==============================
-   NADPISY
-============================== */
-
-h1,
-h2,
-h3 {
-  margin-top: 0;
-}
-
-h2 {
-  margin-bottom: 10px;
-
-  font-size: clamp(30px, 4vw, 45px);
-
-  letter-spacing: -1px;
-}
-
-h3 {
-  font-size: 17px;
-}
-
-/* ==============================
-   HLAVIČKA SKLADU
-============================== */
+/* ==================================================
+   SKLAD
+================================================== */
 
 .section-head {
   display: flex;
-
   align-items: flex-end;
   justify-content: space-between;
 
   gap: 30px;
 
-  margin-bottom: 35px;
+  margin-bottom: 30px;
+}
+
+h2 {
+  margin: 8px 0 0;
+
+  font-size:
+    clamp(30px, 4vw, 44px);
+
+  text-align: left;
 }
 
 #search {
   width: 350px;
   max-width: 100%;
 
-  padding: 14px 17px;
+  padding: 13px 15px;
 
   color: white;
 
   background:
-    rgba(10, 7, 18, 0.78);
+    rgba(10, 7, 18, 0.75);
 
   border:
-    1px solid rgba(255, 255, 255, 0.13);
+    1px solid rgba(255, 255, 255, 0.15);
 
-  border-radius: 12px;
+  border-radius: 10px;
 
   outline: none;
 
   font-size: 14px;
-
-  transition: 0.2s ease;
-}
-
-#search::placeholder {
-  color: #85808f;
 }
 
 #search:focus {
-  border-color:
-    rgba(155, 92, 255, 0.7);
-
-  box-shadow:
-    0 0 0 4px rgba(155, 92, 255, 0.1);
+  border-color: var(--gold);
 }
 
-/* ==============================
+/* ==================================================
    PRODUKTY
-============================== */
+================================================== */
 
 #products {
   display: grid;
@@ -427,20 +546,14 @@ h3 {
   width: 100%;
 }
 
-/* ==============================
-   KARTA
-============================== */
-
 .product {
-  position: relative;
-
   padding: 16px;
 
   background:
     linear-gradient(
       180deg,
-      rgba(29, 24, 43, 0.96),
-      rgba(13, 11, 20, 0.96)
+      rgba(29, 23, 43, 0.95),
+      rgba(14, 11, 21, 0.95)
     );
 
   border:
@@ -451,30 +564,21 @@ h3 {
   text-align: center;
 
   box-shadow:
-    0 12px 35px rgba(0, 0, 0, 0.32);
+    0 12px 35px rgba(0, 0, 0, 0.3);
 
   overflow: hidden;
 
   transition:
     transform 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
+    border-color 0.25s ease;
 }
 
 .product:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px);
 
   border-color:
-    rgba(230, 184, 79, 0.35);
-
-  box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.48),
-    0 0 30px rgba(230, 184, 79, 0.06);
+    rgba(229, 182, 63, 0.35);
 }
-
-/* ==============================
-   OBRÁZKY TELEFÓNOV
-============================== */
 
 .product img {
   display: block;
@@ -484,57 +588,40 @@ h3 {
 
   object-fit: contain;
 
-  margin: 0 auto 16px;
+  margin: 0 auto 15px;
 
   padding: 8px;
 
-  border-radius: 13px;
+  border-radius: 12px;
 
   background:
-    radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.08),
-      rgba(255, 255, 255, 0.01)
-    );
-
-  transition: transform 0.3s ease;
+    rgba(255, 255, 255, 0.04);
 }
-
-.product:hover img {
-  transform: scale(1.04);
-}
-
-/* ==============================
-   INFORMÁCIE PRODUKTU
-============================== */
 
 .product h3 {
-  min-height: 46px;
+  min-height: 45px;
 
   display: flex;
-
   align-items: center;
   justify-content: center;
 
-  margin: 5px 0 7px;
+  margin: 6px 0;
 
-  font-size: 16px;
+  font-size: 17px;
 
-  line-height: 1.35;
+  text-align: center;
 }
 
 .code {
   margin-bottom: 10px;
 
-  color: #9c8bb8;
+  color: #9a82e6;
 
   font-size: 12px;
 }
 
 .price {
   margin-bottom: 8px;
-
-  color: white;
 
   font-size: 14px;
   font-weight: 700;
@@ -550,47 +637,73 @@ h3 {
   color: var(--green);
 
   background:
-    rgba(69, 215, 123, 0.1);
+    rgba(66, 217, 134, 0.09);
 
   border:
-    1px solid rgba(69, 215, 123, 0.16);
+    1px solid rgba(66, 217, 134, 0.16);
 
   border-radius: 7px;
 
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .product button {
   width: 100%;
 
+  padding: 10px;
+
+  color: white;
+
   background:
     linear-gradient(
       135deg,
-      var(--purple-light),
-      var(--purple)
+      var(--purple),
+      var(--purple-dark)
     );
 
+  border: 0;
+  border-radius: 9px;
+
   font-weight: 700;
+
+  cursor: pointer;
 }
 
-.product button:hover {
-  transform: translateY(-1px);
+/* ==================================================
+   VYHĽADANIE NIČ NENAŠLO
+================================================== */
 
-  box-shadow:
-    0 8px 20px rgba(123, 63, 242, 0.3);
+.no-results {
+  grid-column: 1 / -1;
+
+  padding: 70px 20px;
+
+  text-align: center;
 }
 
-/* ==============================
+.no-results-icon {
+  font-size: 42px;
+}
+
+.no-results h3 {
+  font-size: 24px;
+}
+
+.no-results p {
+  color: var(--muted);
+}
+
+/* ==================================================
    OBJEDNÁVKA
-============================== */
+================================================== */
 
 .order-section {
   display: grid;
 
   grid-template-columns: 1fr 1fr;
 
-  gap: 45px;
+  gap: 40px;
 
   align-items: start;
 }
@@ -601,12 +714,12 @@ h3 {
   padding: 20px;
 
   background:
-    rgba(19, 16, 29, 0.9);
+    rgba(20, 15, 35, 0.88);
 
   border:
     1px solid rgba(255, 255, 255, 0.1);
 
-  border-radius: 17px;
+  border-radius: 16px;
 }
 
 .cart-item {
@@ -617,39 +730,31 @@ h3 {
 
   gap: 15px;
 
-  padding: 14px 0;
+  padding: 12px 0;
 
   border-bottom:
     1px solid rgba(255, 255, 255, 0.08);
 }
 
-.cart-item:last-child {
-  border-bottom: 0;
-}
+.cart-item button {
+  padding: 7px 10px;
 
-/* ==============================
-   FORMULÁR
-============================== */
+  color: white;
+
+  background:
+    #6e2d3c;
+
+  border: 0;
+  border-radius: 7px;
+
+  cursor: pointer;
+}
 
 .form {
   display: flex;
-
   flex-direction: column;
 
   gap: 12px;
-
-  padding: 25px;
-
-  background:
-    rgba(19, 16, 29, 0.9);
-
-  border:
-    1px solid rgba(255, 255, 255, 0.1);
-
-  border-radius: 17px;
-
-  box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.25);
 }
 
 .form input,
@@ -661,12 +766,12 @@ h3 {
   color: white;
 
   background:
-    rgba(0, 0, 0, 0.28);
+    rgba(10, 7, 18, 0.75);
 
   border:
-    1px solid rgba(255, 255, 255, 0.1);
+    1px solid rgba(255, 255, 255, 0.12);
 
-  border-radius: 9px;
+  border-radius: 10px;
 
   outline: none;
 
@@ -674,39 +779,100 @@ h3 {
 }
 
 .form textarea {
-  min-height: 110px;
+  min-height: 120px;
 
   resize: vertical;
 }
 
-.form input:focus,
-.form textarea:focus {
-  border-color:
-    rgba(155, 92, 255, 0.65);
-}
-
-.form .btn {
-  width: 100%;
-}
-
 .muted {
-  color: #777181;
+  color: #7f788b;
 
   font-size: 12px;
 
   text-align: center;
 }
 
-/* ==============================
+/* ==================================================
+   KONTAKT
+================================================== */
+
+.contact-section {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 40px;
+
+  align-items: center;
+
+  padding-bottom: 100px;
+}
+
+.contact-text {
+  max-width: 550px;
+
+  color: #bdb8c8;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+}
+
+.contact-box {
+  padding: 25px;
+
+  background:
+    rgba(20, 15, 35, 0.88);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.12);
+
+  border-radius: 18px;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  padding: 14px 0;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.08);
+}
+
+.contact-item:last-child {
+  border-bottom: 0;
+}
+
+.contact-item strong {
+  color: var(--gold-light);
+}
+
+.contact-item a,
+.contact-item span {
+  color: white;
+
+  text-decoration: none;
+
+  font-size: 16px;
+}
+
+/* ==================================================
    ADMINISTRÁCIA
-============================== */
+================================================== */
+
+.hidden {
+  display: none !important;
+}
 
 .modal {
   position: fixed;
 
   inset: 0;
 
-  z-index: 2000;
+  z-index: 5000;
 
   display: flex;
 
@@ -716,13 +882,9 @@ h3 {
   padding: 20px;
 
   background:
-    rgba(0, 0, 0, 0.72);
+    rgba(0, 0, 0, 0.75);
 
   backdrop-filter: blur(8px);
-}
-
-.modal.hidden {
-  display: none;
 }
 
 .modal-box {
@@ -740,34 +902,41 @@ h3 {
     #171321;
 
   border:
-    1px solid rgba(230, 184, 79, 0.2);
+    1px solid rgba(255, 255, 255, 0.14);
 
-  border-radius: 22px;
+  border-radius: 20px;
 
   box-shadow:
-    0 30px 100px rgba(0, 0, 0, 0.65);
+    0 30px 100px rgba(0, 0, 0, 0.6);
 }
 
 .close {
   position: absolute;
 
-  top: 15px;
+  top: 12px;
   right: 15px;
 
   width: 38px;
   height: 38px;
 
-  padding: 0;
+  color: white;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  border: 0;
+  border-radius: 8px;
 
   font-size: 24px;
+
+  cursor: pointer;
 }
 
 .admin-form {
-  display: grid;
+  display: flex;
+  flex-direction: column;
 
   gap: 10px;
-
-  margin-bottom: 25px;
 }
 
 .admin-form input {
@@ -779,7 +948,7 @@ h3 {
     rgba(0, 0, 0, 0.3);
 
   border:
-    1px solid rgba(255, 255, 255, 0.1);
+    1px solid rgba(255,255,255,0.12);
 
   border-radius: 9px;
 }
@@ -787,43 +956,24 @@ h3 {
 .danger {
   margin-top: 20px;
 
-  color: #ff8c8c;
+  padding: 11px 15px;
+
+  color: #ffaaaa;
 
   background:
-    rgba(255, 70, 70, 0.15);
+    rgba(160, 40, 55, 0.25);
+
+  border: 0;
+  border-radius: 8px;
+
+  cursor: pointer;
 }
 
-/* ==============================
-   TOAST
-============================== */
-
-.toast {
-  position: fixed;
-
-  right: 20px;
-  bottom: 20px;
-
-  z-index: 3000;
-
-  padding: 14px 18px;
-
-  background:
-    #171321;
-
-  border:
-    1px solid rgba(255, 255, 255, 0.12);
-
-  border-radius: 10px;
-
-  box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.4);
-}
-
-/* ==============================
+/* ==================================================
    MOBIL
-============================== */
+================================================== */
 
-@media (max-width: 1050px) {
+@media (max-width: 1000px) {
 
   #products {
     grid-template-columns:
@@ -833,99 +983,84 @@ h3 {
   .hero {
     grid-template-columns: 1fr;
 
-    min-height: auto;
-
-    padding: 70px 0;
-  }
-
-  .hero > div:first-child {
-    padding: 30px;
+    padding: 55px 0;
   }
 
   .hero-card {
-    max-width: 500px;
-
-    margin: 0 30px;
+    margin: 0 30px 30px;
   }
 
-  .order-section {
+  .order-section,
+  .contact-section {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 800px) {
 
   .topbar {
-    padding: 13px 5%;
+    flex-wrap: wrap;
+
+    padding: 12px 5%;
   }
 
-  .brand {
-    font-size: 19px;
-  }
+  .top-search {
+    order: 3;
 
-  nav a {
-    display: none;
-  }
-
-  .hero {
     width: 100%;
+    max-width: none;
 
-    border-radius: 0;
-
-    padding: 45px 0;
+    margin-top: 4px;
   }
 
-  .hero > div:first-child {
-    padding: 25px;
-  }
-
-  .hero h1 {
-    font-size: 46px;
-  }
-
-  .hero .lead {
-    font-size: 16px;
-  }
-
-  .hero-card {
-    margin: 0 25px;
-  }
-
-  .section {
-    padding: 55px 0;
+  #products {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
   }
 
   .section-head {
     flex-direction: column;
 
     align-items: stretch;
-
-    gap: 20px;
   }
 
   #search {
     width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+
+  .brand {
+    font-size: 18px;
+  }
+
+  .menu-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .top-search button {
+    padding: 12px 14px;
   }
 
   #products {
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
 
-    gap: 12px;
+    gap: 10px;
   }
 
   .product {
-    padding: 11px;
-
-    border-radius: 14px;
+    padding: 10px;
   }
 
   .product img {
-    height: 150px;
+    height: 135px;
   }
 
   .product h3 {
-    min-height: 42px;
+    min-height: 40px;
 
     font-size: 14px;
   }
@@ -935,19 +1070,8 @@ h3 {
 
     font-size: 12px;
   }
-}
 
-@media (max-width: 400px) {
-
-  #products {
-    grid-template-columns: 1fr;
-  }
-
-  .product img {
-    height: 210px;
-  }
-
-  .hero-card {
-    grid-template-columns: 1fr;
+  .hero h1 {
+    font-size: 45px;
   }
 }
