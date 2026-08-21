@@ -1,301 +1,1669 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>V&P Service | Sklad náhradných dielov</title>
+  <title>V&P Service | Náhradné diely</title>
 
-  <link rel="stylesheet" href="styles.css">
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: white;
+      background:
+        linear-gradient(
+          rgba(7, 4, 14, 0.78),
+          rgba(7, 4, 14, 0.88)
+        ),
+        url("pozadie.jpg");
+
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+
+    /* =========================
+       HORNÁ LIŠTA
+    ========================= */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      width: 100%;
+      height: 76px;
+
+      background: rgba(7, 5, 12, 0.97);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+
+      display: flex;
+      align-items: center;
+
+      padding: 0 38px;
+    }
+
+    /* Logo + názov */
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      min-width: 260px;
+      text-decoration: none;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 50px;
+
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-name {
+      font-size: 21px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .brand-name .gold {
+      color: #f4c43d;
+    }
+
+    /* =========================
+       VYHĽADÁVANIE
+    ========================= */
+
+    .search-area {
+      flex: 1;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      gap: 8px;
+    }
+
+    .search-area input {
+      width: min(500px, 55vw);
+
+      height: 48px;
+
+      padding: 0 18px;
+
+      border-radius: 11px;
+      border: 1px solid rgba(255,255,255,0.18);
+
+      outline: none;
+
+      background: rgba(25, 21, 32, 0.95);
+      color: white;
+
+      font-size: 15px;
+    }
+
+    .search-area input::placeholder {
+      color: #aaa;
+    }
+
+    .search-area input:focus {
+      border-color: #f2bd36;
+      box-shadow: 0 0 0 2px rgba(242,189,54,0.12);
+    }
+
+    .search-btn {
+      height: 48px;
+
+      padding: 0 24px;
+
+      border: 0;
+      border-radius: 11px;
+
+      background: linear-gradient(
+        135deg,
+        #ffd45a,
+        #e8aa24
+      );
+
+      color: #17120a;
+
+      font-weight: 800;
+      font-size: 15px;
+
+      cursor: pointer;
+
+      transition: 0.2s;
+    }
+
+    .search-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    /* =========================
+       TRI ČIARKY
+    ========================= */
+
+    .menu-button {
+      width: 48px;
+      height: 48px;
+
+      margin-left: 25px;
+
+      border-radius: 11px;
+
+      border: 1px solid rgba(255,255,255,0.18);
+
+      background: rgba(30, 25, 38, 0.95);
+
+      display: flex;
+      flex-direction: column;
+
+      justify-content: center;
+      align-items: center;
+
+      gap: 5px;
+
+      cursor: pointer;
+    }
+
+    .menu-button span {
+      display: block;
+
+      width: 24px;
+      height: 2px;
+
+      background: white;
+
+      border-radius: 2px;
+    }
+
+    .menu-button:hover {
+      border-color: #f2bd36;
+    }
+
+    /* =========================
+       OTVORENÉ MENU
+    ========================= */
+
+    .menu-panel {
+      position: fixed;
+
+      top: 86px;
+      right: 30px;
+
+      width: 240px;
+
+      background: rgba(12, 9, 18, 0.98);
+
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 15px;
+
+      padding: 12px;
+
+      box-shadow: 0 15px 45px rgba(0,0,0,0.5);
+
+      display: none;
+
+      z-index: 2000;
+    }
+
+    .menu-panel.open {
+      display: block;
+    }
+
+    .menu-panel a {
+      display: block;
+
+      padding: 14px 16px;
+
+      border-radius: 9px;
+
+      color: white;
+      text-decoration: none;
+
+      font-weight: 700;
+
+      transition: 0.2s;
+    }
+
+    .menu-panel a:hover {
+      background: rgba(242,189,54,0.12);
+      color: #f4c43d;
+    }
+
+    /* =========================
+       HLAVNÁ ČASŤ
+    ========================= */
+
+    main {
+      width: min(1200px, 92%);
+      margin: 0 auto;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 470px;
+
+      margin-top: 18px;
+
+      border-radius: 22px;
+
+      border: 1px solid rgba(255,255,255,0.15);
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(8,5,15,0.88),
+          rgba(8,5,15,0.42),
+          rgba(8,5,15,0.65)
+        ),
+        url("pozadie.jpg");
+
+      background-size: cover;
+      background-position: center;
+
+      display: flex;
+      align-items: center;
+
+      padding: 55px;
+
+      position: relative;
+
+      overflow: hidden;
+    }
+
+    .hero-content {
+      width: 55%;
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      color: #f4c43d;
+
+      font-size: 13px;
+
+      font-weight: 900;
+
+      letter-spacing: 3px;
+
+      margin-bottom: 15px;
+    }
+
+    .hero h1 {
+      margin: 0;
+
+      font-size: clamp(46px, 6vw, 78px);
+
+      line-height: 0.98;
+
+      letter-spacing: -2px;
+
+      text-align: left;
+    }
+
+    .hero p {
+      max-width: 620px;
+
+      margin: 28px 0;
+
+      font-size: 17px;
+
+      line-height: 1.6;
+
+      color: #e2e2e2;
+    }
+
+    .hero-button {
+      display: inline-block;
+
+      padding: 15px 25px;
+
+      border-radius: 11px;
+
+      background: linear-gradient(
+        135deg,
+        #8e43ff,
+        #6f24ef
+      );
+
+      color: white;
+
+      text-decoration: none;
+
+      font-weight: 800;
+    }
+
+    /* =========================
+       ŠTATISTIKA
+    ========================= */
+
+    .stats {
+      position: absolute;
+
+      right: 40px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      width: 410px;
+
+      background: rgba(12,9,19,0.93);
+
+      border: 1px solid rgba(255,255,255,0.16);
+
+      border-radius: 20px;
+
+      padding: 28px 32px;
+
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+
+      gap: 18px;
+
+      min-height: 70px;
+    }
+
+    .stat + .stat {
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 16px;
+      margin-top: 10px;
+    }
+
+    .stat-number {
+      min-width: 60px;
+
+      color: #ffd34e;
+
+      font-size: 40px;
+
+      font-weight: 900;
+    }
+
+    .stat-label {
+      color: #cfcbd4;
+
+      font-size: 14px;
+    }
+
+    /* =========================
+       SKLAD
+    ========================= */
+
+    .stock-section {
+      padding: 70px 0 100px;
+    }
+
+    .section-title {
+      margin-bottom: 30px;
+    }
+
+    .section-title .small {
+      color: #f4c43d;
+
+      font-size: 13px;
+
+      font-weight: 900;
+
+      letter-spacing: 3px;
+
+      margin-bottom: 8px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+
+      font-size: 42px;
+
+      text-align: left;
+    }
+
+    /* =========================
+       VÝSLEDKY VYHĽADÁVANIA
+    ========================= */
+
+    .search-result {
+      display: none;
+
+      margin: -5px 0 25px;
+
+      padding: 12px 16px;
+
+      border-radius: 10px;
+
+      background: rgba(242,189,54,0.08);
+
+      border: 1px solid rgba(242,189,54,0.18);
+
+      color: #f4c43d;
+
+      font-weight: 700;
+    }
+
+    .search-result.visible {
+      display: block;
+    }
+
+    /* =========================
+       PRODUKTY
+    ========================= */
+
+    #products {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+      gap: 20px;
+    }
+
+    .product {
+      background: rgba(18,15,27,0.94);
+
+      border: 1px solid rgba(255,255,255,0.14);
+
+      border-radius: 17px;
+
+      padding: 16px;
+
+      min-width: 0;
+
+      transition: 0.2s;
+    }
+
+    .product:hover {
+      transform: translateY(-3px);
+
+      border-color: rgba(242,189,54,0.45);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 190px;
+
+      object-fit: contain;
+
+      display: block;
+
+      margin-bottom: 15px;
+
+      border-radius: 10px;
+    }
+
+    .product h3 {
+      margin: 5px 0 8px;
+
+      font-size: 18px;
+
+      text-align: left;
+    }
+
+    .code {
+      color: #aaa;
+
+      font-size: 14px;
+
+      margin-bottom: 14px;
+    }
+
+    .price {
+      font-size: 17px;
+
+      font-weight: 800;
+
+      margin-bottom: 8px;
+    }
+
+    .stock {
+      color: #00ed71;
+
+      margin-bottom: 16px;
+
+      font-size: 15px;
+    }
+
+    .add-button {
+      width: 100%;
+
+      padding: 13px 10px;
+
+      border: 0;
+
+      border-radius: 10px;
+
+      background: linear-gradient(
+        135deg,
+        #8b3cff,
+        #6c1fe9
+      );
+
+      color: white;
+
+      font-size: 14px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+    }
+
+    .add-button:hover {
+      filter: brightness(1.1);
+    }
+
+    /* =========================
+       KOŠÍK
+    ========================= */
+
+    .cart-section {
+      width: min(800px, 100%);
+
+      margin: 40px auto 100px;
+
+      padding: 25px;
+
+      background: rgba(18,15,27,0.95);
+
+      border: 1px solid rgba(255,255,255,0.14);
+
+      border-radius: 17px;
+    }
+
+    .cart-section h2 {
+      margin-top: 0;
+    }
+
+    .cart-item {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 15px;
+
+      padding: 12px 0;
+
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .remove-button {
+      border: 0;
+
+      border-radius: 7px;
+
+      padding: 7px 10px;
+
+      background: #8d2020;
+
+      color: white;
+
+      cursor: pointer;
+    }
+
+    /* =========================
+       ŽIADNE VÝSLEDKY
+    ========================= */
+
+    .no-results {
+      grid-column: 1 / -1;
+
+      padding: 50px 20px;
+
+      text-align: center;
+
+      border: 1px dashed rgba(255,255,255,0.2);
+
+      border-radius: 15px;
+
+      color: #aaa;
+    }
+
+    /* =========================
+       MOBIL
+    ========================= */
+
+    @media (max-width: 900px) {
+
+      .topbar {
+        padding: 0 15px;
+        height: 68px;
+      }
+
+      .brand {
+        min-width: auto;
+      }
+
+      .brand-name {
+        font-size: 17px;
+      }
+
+      .brand img {
+        width: 34px;
+        height: 42px;
+      }
+
+      .search-area input {
+        width: 100%;
+      }
+
+      .search-btn {
+        padding: 0 14px;
+      }
+
+      .menu-button {
+        margin-left: 10px;
+      }
+
+      .hero {
+        padding: 35px 25px;
+        min-height: 620px;
+      }
+
+      .hero-content {
+        width: 100%;
+      }
+
+      .hero h1 {
+        font-size: 48px;
+      }
+
+      .stats {
+        position: absolute;
+
+        left: 25px;
+        right: 25px;
+
+        top: auto;
+        bottom: 25px;
+
+        transform: none;
+
+        width: auto;
+      }
+
+      #products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+    }
+
+    @media (max-width: 600px) {
+
+      .brand-name {
+        display: none;
+      }
+
+      .search-area {
+        margin-left: 10px;
+      }
+
+      .search-area input {
+        min-width: 0;
+        font-size: 13px;
+      }
+
+      .search-btn {
+        font-size: 13px;
+      }
+
+      .hero {
+        min-height: 650px;
+      }
+
+      .hero h1 {
+        font-size: 40px;
+      }
+
+      .hero p {
+        font-size: 15px;
+      }
+
+      #products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .product {
+        padding: 10px;
+      }
+
+      .product-image {
+        height: 130px;
+      }
+
+      .product h3 {
+        font-size: 15px;
+      }
+
+      .section-title h2 {
+        font-size: 32px;
+      }
+
+      .menu-panel {
+        right: 15px;
+      }
+
+    }
+
+  </style>
 </head>
 
 <body>
 
-<header class="topbar">
+  <!-- =========================
+       HORNÁ LIŠTA
+  ========================== -->
 
-  <div class="brand">
-    <img src="logo.png" alt="V&P Service">
-    <span>V&P Service</span>
-  </div>
+  <header class="topbar">
 
-  <div class="top-search">
-    <input
-      id="topSearch"
-      type="search"
-      placeholder="Vyhľadávať súčiastku, model alebo kód..."
-    >
-    <button id="topSearchBtn">Hľadať</button>
-  </div>
+    <a href="#" class="brand">
 
-  <button id="menuBtn" class="menu-btn" aria-label="Otvoriť menu">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-
-  <div id="menu" class="menu">
-    <a href="#sklad">📦 Sklad</a>
-    <a href="#objednavka">🛒 Objednávka</a>
-    <button id="adminBtn">⚙️ Administrácia</button>
-    <a href="#kontakt">📞 Kontakt</a>
-  </div>
-
-</header>
-
-
-<section class="hero">
-
-  <div class="hero-content">
-
-    <div class="hero-text">
-
-      <p class="eyebrow">V&P SERVICE</p>
-
-      <h1>
-        Náhradné diely<br>
-        skladom.
-      </h1>
-
-      <p class="lead">
-        Pozrite si aktuálne dostupné súčiastky
-        a vytvorte objednávku jednoducho online.
-      </p>
-
-      <a class="btn hero-btn" href="#sklad">
-        Pozrieť sklad
-      </a>
-
-    </div>
-
-
-    <div class="hero-logo">
+      <!-- MALÉ LOGO -->
       <img src="logo.png" alt="V&P Service">
-    </div>
+
+      <span class="brand-name">
+        <span class="gold">V&P</span> Service
+      </span>
+
+    </a>
 
 
-    <div class="hero-card">
+    <!-- VYHĽADÁVANIE -->
 
-      <div class="stat">
-
-        <strong id="onlineVisitors">10</strong>
-
-        <span>
-          Práve návštevníkov online
-        </span>
-
-      </div>
-
-      <div class="stat-divider"></div>
-
-      <div class="stat">
-
-        <strong id="availableCount">
-          57
-        </strong>
-
-        <span>
-          ks aktuálne skladom
-        </span>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<main>
-
-<section id="sklad" class="section">
-
-  <div class="section-head">
-
-    <div>
-      <p class="eyebrow">SKLAD</p>
-
-      <h2>
-        Dostupné súčiastky
-      </h2>
-    </div>
-
-  </div>
-
-
-  <div id="products" class="grid"></div>
-
-</section>
-
-
-<section id="objednavka" class="section order-section">
-
-  <div>
-
-    <p class="eyebrow">
-      OBJEDNÁVKA
-    </p>
-
-    <h2>
-      Vaša objednávka
-    </h2>
-
-    <div id="cart"></div>
-
-  </div>
-
-
-  <form id="orderForm" class="form">
-
-    <input
-      name="name"
-      placeholder="Meno a priezvisko *"
-      required
-    >
-
-    <input
-      name="company"
-      placeholder="Firma"
-    >
-
-    <input
-      name="email"
-      type="email"
-      placeholder="E-mail *"
-      required
-    >
-
-    <input
-      name="phone"
-      placeholder="Telefón *"
-      required
-    >
-
-    <textarea
-      name="note"
-      placeholder="Poznámka k objednávke"
-    ></textarea>
-
-    <button
-      class="btn"
-      type="submit"
-    >
-      Odoslať objednávku
-    </button>
-
-    <p class="muted">
-      Odoslanie je v tejto demo verzii simulované.
-    </p>
-
-  </form>
-
-</section>
-
-
-<section id="kontakt" class="section contact-section">
-
-  <p class="eyebrow">
-    KONTAKT
-  </p>
-
-  <h2>
-    V&P Service
-  </h2>
-
-  <p>
-    Pre objednávky a ďalšie informácie nás kontaktujte.
-  </p>
-
-</section>
-
-</main>
-
-
-<div id="adminModal" class="modal hidden">
-
-  <div class="modal-box">
-
-    <button
-      class="close"
-      id="closeAdmin"
-    >
-      ×
-    </button>
-
-    <p class="eyebrow">
-      ADMINISTRÁCIA
-    </p>
-
-    <h2>
-      Správa skladu
-    </h2>
-
-
-    <form
-      id="addForm"
-      class="admin-form"
-    >
+    <form class="search-area" id="searchForm">
 
       <input
-        name="name"
-        placeholder="Názov súčiastky"
-        required
-      >
-
-      <input
-        name="code"
-        placeholder="Kód / OEM číslo"
-        required
-      >
-
-      <input
-        name="price"
-        type="number"
-        min="0"
-        step="0.01"
-        placeholder="Cena €"
-        required
-      >
-
-      <input
-        name="qty"
-        type="number"
-        min="0"
-        placeholder="Počet ks"
-        required
+        type="text"
+        id="search"
+        placeholder="Vyhľadávať súčiastku, model alebo kód..."
+        autocomplete="off"
       >
 
       <button
-        class="btn"
         type="submit"
+        class="search-btn"
       >
-        Pridať súčiastku
+        Hľadať
       </button>
 
     </form>
 
 
-    <div id="adminList"></div>
+    <!-- IBA TRI ČIARKY -->
 
     <button
-      id="resetBtn"
-      class="danger"
+      class="menu-button"
+      id="menuButton"
+      type="button"
+      aria-label="Otvoriť menu"
     >
-      Obnoviť demo sklad
+
+      <span></span>
+      <span></span>
+      <span></span>
+
     </button>
+
+  </header>
+
+
+  <!-- =========================
+       MENU
+  ========================== -->
+
+  <div class="menu-panel" id="menuPanel">
+
+    <a href="#sklad" onclick="closeMenu()">
+      📦 Sklad
+    </a>
+
+    <a href="#objednavka" onclick="closeMenu()">
+      🛒 Objednávka
+    </a>
+
+    <a href="#administracia" onclick="closeMenu()">
+      ⚙️ Administrácia
+    </a>
+
+    <a href="#kontakt" onclick="closeMenu()">
+      📞 Kontakt
+    </a>
 
   </div>
 
-</div>
+
+  <main>
+
+    <!-- =========================
+         HLAVNÁ ČASŤ
+    ========================== -->
+
+    <section class="hero">
+
+      <div class="hero-content">
+
+        <div class="eyebrow">
+          V&amp;P SERVICE
+        </div>
+
+        <h1>
+          Náhradné diely<br>
+          skladom.
+        </h1>
+
+        <p>
+          Pozrite si aktuálne dostupné súčiastky
+          a vytvorte objednávku jednoducho online.
+        </p>
+
+        <a
+          href="#sklad"
+          class="hero-button"
+        >
+          Pozrieť sklad
+        </a>
+
+      </div>
 
 
-<div
-  id="toast"
-  class="toast"
-></div>
+      <!-- ŠTATISTIKA -->
+
+      <div class="stats">
+
+        <div class="stat">
+
+          <div
+            class="stat-number"
+            id="onlineCount"
+          >
+            10
+          </div>
+
+          <div class="stat-label">
+            Práve návštevníkov online
+          </div>
+
+        </div>
 
 
-<script src="app.js"></script>
+        <div class="stat">
+
+          <div
+            class="stat-number"
+            id="stockCount"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            ks aktuálne skladom
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         SKLAD
+    ========================== -->
+
+    <section
+      class="stock-section"
+      id="sklad"
+    >
+
+      <div class="section-title">
+
+        <div class="small">
+          SKLAD
+        </div>
+
+        <h2>
+          Dostupné súčiastky
+        </h2>
+
+      </div>
+
+
+      <div
+        class="search-result"
+        id="searchResult"
+      ></div>
+
+
+      <div id="products"></div>
+
+    </section>
+
+
+    <!-- =========================
+         OBJEDNÁVKA
+    ========================== -->
+
+    <section
+      class="cart-section"
+      id="objednavka"
+    >
+
+      <h2>
+        Objednávka
+      </h2>
+
+      <div id="cart">
+        Objednávka je zatiaľ prázdna.
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         ADMINISTRÁCIA
+    ========================== -->
+
+    <section
+      class="cart-section"
+      id="administracia"
+    >
+
+      <h2>
+        Administrácia
+      </h2>
+
+      <p>
+        Administrácia skladu.
+      </p>
+
+    </section>
+
+
+    <!-- =========================
+         KONTAKT
+    ========================== -->
+
+    <section
+      class="cart-section"
+      id="kontakt"
+    >
+
+      <h2>
+        Kontakt
+      </h2>
+
+      <p>
+        V&amp;P Service
+      </p>
+
+      <p>
+        Kontaktujte nás pre viac informácií
+        o náhradných dieloch.
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <script>
+
+    /* ==========================================
+       PRODUKTY
+    ========================================== */
+
+    const DEFAULT = [
+
+      {id:1, name:"Alcatel 5028", code:"VP-001", price:0, qty:1},
+      {id:2, name:"Honor 8A", code:"VP-002", price:0, qty:1},
+      {id:3, name:"Honor X6A", code:"VP-003", price:0, qty:1},
+      {id:4, name:"Huawei P20", code:"VP-004", price:0, qty:1},
+      {id:5, name:"Huawei P20 Lite", code:"VP-005", price:0, qty:1},
+      {id:6, name:"Huawei P30 Lite", code:"VP-006", price:0, qty:1},
+      {id:7, name:"Huawei P Smart 2019", code:"VP-007", price:0, qty:1},
+      {id:8, name:"Huawei P Smart 2021", code:"VP-008", price:0, qty:1},
+      {id:9, name:"Huawei Y5-2", code:"VP-009", price:0, qty:2},
+      {id:10, name:"Huawei Y7 Prime", code:"VP-010", price:0, qty:1},
+
+      {
+        id:11,
+        name:"Infinix Smart 8 – poškodený konektor flex od displeja",
+        code:"VP-011",
+        price:0,
+        qty:1
+      },
+
+      {id:12, name:"Lenovo K9", code:"VP-012", price:0, qty:1},
+      {id:13, name:"Moto E2", code:"VP-013", price:0, qty:1},
+      {id:14, name:"Moto E7 Plus", code:"VP-014", price:0, qty:1},
+      {id:15, name:"Moto E7 Power", code:"VP-015", price:0, qty:2},
+      {id:16, name:"Moto E13", code:"VP-016", price:0, qty:1},
+      {id:17, name:"Moto E20", code:"VP-017", price:0, qty:1},
+      {id:18, name:"Moto G14", code:"VP-018", price:0, qty:1},
+
+      {id:19, name:"Redmi 8", code:"VP-019", price:0, qty:2},
+      {id:20, name:"Redmi 9A", code:"VP-020", price:0, qty:1},
+      {id:21, name:"Redmi 9C", code:"VP-021", price:0, qty:1},
+      {id:22, name:"Redmi 12C", code:"VP-022", price:0, qty:3},
+      {id:23, name:"Redmi 13C", code:"VP-023", price:0, qty:1},
+      {id:24, name:"Redmi A1", code:"VP-024", price:0, qty:1},
+      {id:25, name:"Redmi A2", code:"VP-025", price:0, qty:1},
+      {id:26, name:"Redmi A3CGE", code:"VP-026", price:0, qty:1},
+      {id:27, name:"Redmi Note 5 Pro", code:"VP-027", price:0, qty:1},
+      {id:28, name:"Redmi Note 5A Prime", code:"VP-028", price:0, qty:1},
+      {id:29, name:"Redmi Note 8 Pro", code:"VP-029", price:0, qty:1},
+      {id:30, name:"Redmi Note 9", code:"VP-030", price:0, qty:1},
+      {id:31, name:"Redmi Note 11 a 11S", code:"VP-031", price:0, qty:1},
+
+      {id:32, name:"Samsung A3", code:"VP-032", price:0, qty:1},
+      {id:33, name:"Samsung A5", code:"VP-033", price:0, qty:2},
+      {id:34, name:"Samsung Galaxy A03", code:"VP-034", price:0, qty:1},
+      {id:35, name:"Samsung Galaxy A8", code:"VP-035", price:0, qty:1},
+      {id:36, name:"Samsung Galaxy A12", code:"VP-036", price:0, qty:1},
+      {id:37, name:"Samsung Galaxy A13", code:"VP-037", price:0, qty:1},
+      {id:38, name:"Samsung Galaxy A20", code:"VP-038", price:0, qty:1},
+      {id:39, name:"Samsung Galaxy A20e", code:"VP-039", price:0, qty:1},
+      {id:40, name:"Samsung Galaxy A50", code:"VP-040", price:0, qty:1},
+      {id:41, name:"Samsung Galaxy A53", code:"VP-041", price:0, qty:2},
+      {id:42, name:"Samsung Galaxy A217F", code:"VP-042", price:0, qty:1},
+      {id:43, name:"Samsung Galaxy A405FN", code:"VP-043", price:0, qty:1},
+      {id:44, name:"Samsung Galaxy J510FN", code:"VP-044", price:0, qty:1},
+      {id:45, name:"Samsung Galaxy Note 10", code:"VP-045", price:0, qty:1},
+      {id:46, name:"Samsung Galaxy S5 Mini", code:"VP-046", price:0, qty:2},
+      {id:47, name:"Samsung Galaxy S6", code:"VP-047", price:0, qty:1},
+      {id:48, name:"Samsung Galaxy S10", code:"VP-048", price:0, qty:1},
+
+      {id:49, name:"Tecno Spark 8", code:"VP-049", price:0, qty:1}
+
+    ];
+
+
+    let products =
+      JSON.parse(
+        localStorage.getItem("vp_products") || "null"
+      ) || DEFAULT;
+
+
+    let cart =
+      JSON.parse(
+        localStorage.getItem("vp_cart") || "[]"
+      );
+
+
+    /* ==========================================
+       ULOŽENIE
+    ========================================== */
+
+    function save() {
+
+      localStorage.setItem(
+        "vp_products",
+        JSON.stringify(products)
+      );
+
+      localStorage.setItem(
+        "vp_cart",
+        JSON.stringify(cart)
+      );
+
+    }
+
+
+    /* ==========================================
+       VYHĽADÁVANIE
+    ========================================== */
+
+    function searchProducts() {
+
+      const input =
+        document
+          .getElementById("search")
+          .value
+          .toLowerCase()
+          .trim();
+
+
+      let list;
+
+
+      /*
+        Prázdne vyhľadávanie =
+        zobrazia sa všetky produkty.
+      */
+
+      if (!input) {
+
+        list = products;
+
+      } else {
+
+        /*
+          Hľadáme priamo v NÁZVE
+          alebo v KÓDE.
+
+          Napríklad:
+
+          moto
+          -> Moto E2
+          -> Moto E7 Plus
+          -> Moto E7 Power
+          -> Moto E13
+          -> Moto E20
+          -> Moto G14
+
+          samsung
+          -> všetky Samsungy
+        */
+
+        list = products.filter(product => {
+
+          const name =
+            product.name.toLowerCase();
+
+          const code =
+            product.code.toLowerCase();
+
+          return (
+            name.includes(input) ||
+            code.includes(input)
+          );
+
+        });
+
+      }
+
+
+      renderProducts(list);
+
+
+      const result =
+        document.getElementById("searchResult");
+
+
+      if (input) {
+
+        result.classList.add("visible");
+
+        result.textContent =
+          `Vyhľadávanie „${input}“ – nájdených ${list.length} súčiastok.`;
+
+      } else {
+
+        result.classList.remove("visible");
+
+      }
+
+
+      /*
+        Po stlačení Hľadať
+        sa stránka presunie na sklad.
+      */
+
+      document
+        .getElementById("sklad")
+        .scrollIntoView({
+          behavior: "smooth"
+        });
+
+    }
+
+
+    /* ==========================================
+       OBRÁZOK PRODUKTU
+    ========================================== */
+
+    function getProductImage(product) {
+
+      /*
+        Obrázky sa očakávajú v priečinku:
+
+        images/
+
+        napríklad:
+
+        images/VP-001.jpg
+        images/VP-002.jpg
+        images/VP-003.jpg
+      */
+
+      return `images/${product.code}.jpg`;
+
+    }
+
+
+    /* ==========================================
+       VYKRESLENIE PRODUKTOV
+    ========================================== */
+
+    function renderProducts(list) {
+
+      const productsEl =
+        document.getElementById("products");
+
+
+      if (!list.length) {
+
+        productsEl.innerHTML = `
+          <div class="no-results">
+            <strong>Nenašla sa žiadna súčiastka.</strong>
+            <br><br>
+            Skús iný názov alebo kód.
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      productsEl.innerHTML =
+        list.map(product => `
+
+          <article class="product">
+
+            <img
+              class="product-image"
+              src="${getProductImage(product)}"
+              alt="${product.name}"
+              onerror="this.style.display='none'"
+            >
+
+            <h3>
+              ${product.name}
+            </h3>
+
+            <div class="code">
+              ${product.code}
+            </div>
+
+            <div class="price">
+
+              ${
+                product.price > 0
+                  ? product.price.toFixed(2) + " €"
+                  : "Cena na vyžiadanie"
+              }
+
+            </div>
+
+            <div class="stock">
+              Skladom: ${product.qty} ks
+            </div>
+
+            <button
+              class="add-button"
+              onclick="addToCart(${product.id})"
+            >
+              Pridať do objednávky
+            </button>
+
+          </article>
+
+        `).join("");
+
+    }
+
+
+    /* ==========================================
+       PRIDANIE DO OBJEDNÁVKY
+    ========================================== */
+
+    function addToCart(id) {
+
+      const product =
+        products.find(
+          p => p.id === id
+        );
+
+
+      if (!product || product.qty <= 0) {
+        return;
+      }
+
+
+      const existing =
+        cart.find(
+          item => item.id === id
+        );
+
+
+      if (existing) {
+
+        if (
+          existing.amount <
+          product.qty
+        ) {
+
+          existing.amount++;
+
+        }
+
+      } else {
+
+        cart.push({
+
+          id: product.id,
+
+          name: product.name,
+
+          amount: 1
+
+        });
+
+      }
+
+
+      save();
+
+      renderCart();
+
+      alert(
+        "Diel bol pridaný do objednávky."
+      );
+
+    }
+
+
+    /* ==========================================
+       OBJEDNÁVKA
+    ========================================== */
+
+    function renderCart() {
+
+      const cartEl =
+        document.getElementById("cart");
+
+
+      if (!cart.length) {
+
+        cartEl.innerHTML =
+          "<p>Objednávka je zatiaľ prázdna.</p>";
+
+        return;
+
+      }
+
+
+      cartEl.innerHTML =
+        cart.map(item => `
+
+          <div class="cart-item">
+
+            <strong>
+              ${item.name}
+            </strong>
+
+            <span>
+              ${item.amount} ks
+            </span>
+
+            <button
+              class="remove-button"
+              onclick="removeFromCart(${item.id})"
+            >
+              Odstrániť
+            </button>
+
+          </div>
+
+        `).join("");
+
+    }
+
+
+    function removeFromCart(id) {
+
+      cart =
+        cart.filter(
+          item => item.id !== id
+        );
+
+      save();
+
+      renderCart();
+
+    }
+
+
+    /* ==========================================
+       SKLAD – POČET KUSOV
+    ========================================== */
+
+    function updateStockCount() {
+
+      const total =
+        products.reduce(
+          (sum, product) =>
+            sum + Number(product.qty || 0),
+          0
+        );
+
+
+      document
+        .getElementById("stockCount")
+        .textContent = total;
+
+    }
+
+
+    /* ==========================================
+       ONLINE NÁVŠTEVNÍCI
+       
+       10 -> 9 -> 10 -> 9
+       každých 10 sekúnd
+    ========================================== */
+
+    let onlineCount = 10;
+
+
+    function updateOnlineCount() {
+
+      onlineCount =
+        onlineCount === 10
+          ? 9
+          : 10;
+
+
+      document
+        .getElementById("onlineCount")
+        .textContent =
+          onlineCount;
+
+    }
+
+
+    setInterval(
+      updateOnlineCount,
+      10000
+    );
+
+
+    /* ==========================================
+       MENU – TRI ČIARKY
+    ========================================== */
+
+    const menuButton =
+      document.getElementById(
+        "menuButton"
+      );
+
+
+    const menuPanel =
+      document.getElementById(
+        "menuPanel"
+      );
+
+
+    menuButton.addEventListener(
+      "click",
+      function(event) {
+
+        event.stopPropagation();
+
+        menuPanel.classList.toggle(
+          "open"
+        );
+
+      }
+    );
+
+
+    /*
+      Kliknutie mimo menu
+      ho zatvorí.
+    */
+
+    document.addEventListener(
+      "click",
+      function(event) {
+
+        if (
+          !menuPanel.contains(event.target) &&
+          !menuButton.contains(event.target)
+        ) {
+
+          menuPanel.classList.remove(
+            "open"
+          );
+
+        }
+
+      }
+    );
+
+
+    function closeMenu() {
+
+      menuPanel.classList.remove(
+        "open"
+      );
+
+    }
+
+
+    /* ==========================================
+       VYHĽADÁVANIE – TLAČIDLO
+    ========================================== */
+
+    document
+      .getElementById("searchForm")
+      .addEventListener(
+        "submit",
+        function(event) {
+
+          event.preventDefault();
+
+          searchProducts();
+
+        }
+      );
+
+
+    /* ==========================================
+       VYHĽADÁVANIE PRI PÍSANÍ
+       
+       Keď používateľ píše,
+       výsledky sa aktualizujú.
+    ========================================== */
+
+    document
+      .getElementById("search")
+      .addEventListener(
+        "input",
+        function() {
+
+          const value =
+            this.value.trim();
+
+
+          if (!value) {
+
+            renderProducts(products);
+
+            document
+              .getElementById("searchResult")
+              .classList.remove(
+                "visible"
+              );
+
+            return;
+
+          }
+
+
+          const text =
+            value.toLowerCase();
+
+
+          const filtered =
+            products.filter(product => {
+
+              return (
+                product.name
+                  .toLowerCase()
+                  .includes(text)
+                ||
+                product.code
+                  .toLowerCase()
+                  .includes(text)
+              );
+
+            });
+
+
+          renderProducts(filtered);
+
+
+          const result =
+            document.getElementById(
+              "searchResult"
+            );
+
+
+          result.classList.add(
+            "visible"
+          );
+
+
+          result.textContent =
+            `Vyhľadávanie „${value}“ – nájdených ${filtered.length} súčiastok.`;
+
+        }
+      );
+
+
+    /* ==========================================
+       SPUSTENIE STRÁNKY
+    ========================================== */
+
+    renderProducts(products);
+
+    renderCart();
+
+    updateStockCount();
+
+  </script>
 
 </body>
 </html>
