@@ -58,7 +58,6 @@
       line-height: 1;
     }
 
-
     /* ================================
        TRI ČIARKY
     ================================= */
@@ -96,7 +95,6 @@
     .menu-btn:hover {
       border-color: rgba(244,197,66,0.7);
     }
-
 
     /* ================================
        ROZBALOVACIE MENU
@@ -147,6 +145,32 @@
       color: #f4c542;
     }
 
+    /* ================================
+       POČET POLOŽIEK V KOŠÍKU
+    ================================= */
+
+    .cart-link {
+      position: relative;
+    }
+
+    .cart-count {
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 999px;
+
+      background: #f4c542;
+      color: #120d1d;
+
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+    }
 
     /* ================================
        MOBIL
@@ -246,6 +270,14 @@
 
         <span class="cart-text">
           Košík
+        </span>
+
+        <span
+          id="cartCount"
+          class="cart-count"
+          aria-label="Počet položiek v košíku"
+        >
+          0
         </span>
 
       </a>
@@ -684,6 +716,66 @@
 
     });
 
+  </script>
+
+
+  <!-- POČÍTADLO POLOŽIEK V KOŠÍKU -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const cartCount =
+        document.getElementById("cartCount");
+
+      if (!cartCount) return;
+
+      let count = 0;
+
+
+      function updateCartCount() {
+
+        cartCount.textContent = count;
+
+      }
+
+
+      updateCartCount();
+
+
+      /*
+        Funguje aj pre tlačidlá,
+        ktoré app.js vytvorí až neskôr.
+      */
+
+      document.addEventListener("click", function (event) {
+
+        const button =
+          event.target.closest("button");
+
+        if (!button) return;
+
+
+        const text =
+          button.textContent
+            .trim()
+            .toLowerCase();
+
+
+        if (
+          text.includes("pridať do košíku") ||
+          text.includes("pridat do kosiku") ||
+          text.includes("pridať do objednávky") ||
+          text.includes("pridat do objednavky")
+        ) {
+
+          count++;
+
+          updateCartCount();
+
+        }
+
+      }, true);
+
+    });
   </script>
 
 
