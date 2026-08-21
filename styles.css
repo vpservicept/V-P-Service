@@ -1145,3 +1145,33 @@ h2 {
     font-size: 30px;
   }
 }
+/* =========================================
+   OBRÁZKY PRODUKTOV - ZOBRAZIŤ VŽDY
+========================================= */
+
+.product-image {
+  display: flex !important;
+  width: 100% !important;
+  height: 180px !important;
+  margin-bottom: 15px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+.product-image img {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  width: 100% !important;
+  height: 180px !important;
+
+  max-width: 100% !important;
+  max-height: 180px !important;
+
+  object-fit: contain !important;
+
+  margin: 0 auto !important;
+  border-radius: 10px !important;
+}
