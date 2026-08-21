@@ -14,13 +14,21 @@
 
 <header class="topbar">
 
+  <!-- LOGO + NÁZOV -->
   <div class="brand">
+
+    <img
+      src="logo.png"
+      alt="V&P Service"
+      class="brand-logo"
+    >
+
     <span>V&P</span> Service
+
   </div>
 
 
-  <!-- VYHĽADÁVANIE -->
-
+  <!-- JEDINÉ VYHĽADÁVANIE -->
   <form id="topSearchForm" class="top-search">
 
     <input
@@ -38,7 +46,6 @@
 
 
   <!-- TRI ČIARKY -->
-
   <div class="menu-wrapper">
 
     <button
@@ -47,17 +54,16 @@
       aria-label="Menu"
       aria-expanded="false"
     >
-
       <span></span>
       <span></span>
       <span></span>
-
     </button>
 
 
-    <!-- MENU PO KLIKNUTÍ -->
-
-    <div id="mainMenu" class="main-menu">
+    <div
+      id="mainMenu"
+      class="main-menu"
+    >
 
       <a href="#sklad">
         📦 &nbsp; Sklad
@@ -82,8 +88,9 @@
 </header>
 
 
+
 <!-- ==============================
-     HLAVNÁ ÚVODNÁ ČASŤ
+     HLAVNÁ ČASŤ
 ================================ -->
 
 <section class="hero">
@@ -165,16 +172,10 @@
 
       </div>
 
-
-      <input
-        id="search"
-        type="search"
-        placeholder="Hľadať súčiastku alebo kód…"
-      >
-
     </div>
 
 
+    <!-- PRODUKTY -->
     <div
       id="products"
       class="grid"
@@ -203,7 +204,6 @@
         Vaša objednávka
       </h2>
 
-
       <div id="cart"></div>
 
     </div>
@@ -220,12 +220,10 @@
         required
       >
 
-
       <input
         name="company"
         placeholder="Firma"
       >
-
 
       <input
         name="email"
@@ -234,19 +232,16 @@
         required
       >
 
-
       <input
         name="phone"
         placeholder="Telefón *"
         required
       >
 
-
       <textarea
         name="note"
         placeholder="Poznámka k objednávke"
       ></textarea>
-
 
       <button
         class="btn"
@@ -254,7 +249,6 @@
       >
         Odoslať objednávku
       </button>
-
 
       <p class="muted">
         Odoslanie je v tejto demo verzii simulované.
@@ -295,7 +289,6 @@
 
     <div class="contact-box">
 
-
       <div class="contact-item">
 
         <strong>
@@ -334,7 +327,6 @@
 
       </div>
 
-
     </div>
 
   </section>
@@ -361,11 +353,9 @@
       ×
     </button>
 
-
     <p class="eyebrow">
       ADMINISTRÁCIA
     </p>
-
 
     <h2>
       Správa skladu
@@ -383,13 +373,11 @@
         required
       >
 
-
       <input
         name="code"
         placeholder="Kód / OEM číslo"
         required
       >
-
 
       <input
         name="price"
@@ -400,7 +388,6 @@
         required
       >
 
-
       <input
         name="qty"
         type="number"
@@ -408,7 +395,6 @@
         placeholder="Počet ks"
         required
       >
-
 
       <button
         class="btn"
@@ -436,10 +422,7 @@
 
 
 
-<div
-  id="toast"
-  class="toast"
-></div>
+<div id="toast" class="toast"></div>
 
 
 
@@ -448,7 +431,7 @@
 
 
 <!-- ==============================
-     OTVÁRANIE TROCH ČIAROK
+     OTVÁRANIE MENU
 ================================ -->
 
 <script>
