@@ -1,15 +1,12 @@
 /* =========================================================
    V&P SERVICE
    SKLAD NÁHRADNÝCH DIELOV
-   UPRAVENÁ VERZIA S KATEGÓRIAMI
-
-   Pôvodných 49 položiek a obrázky zachované.
 ========================================================= */
 
 
-/* =========================
-   PÔVODNÉ PRODUKTY
-========================= */
+/* =========================================================
+   49 PÔVODNÝCH PRODUKTOV
+========================================================= */
 
 const DEFAULT = [
 
@@ -73,93 +70,93 @@ const DEFAULT = [
 const CATEGORIES = [
 
   "Všetky súčiastky",
-
   "Matičné dosky",
-
   "Batérie",
-
   "Displeje",
-
   "Odtlačky prstov",
-
   "Konektory",
-
   "Kamery",
-
   "Reproduktory",
-
   "Kryty",
-
   "Flex káble"
 
 ];
 
 
 /* =========================================================
-   PRODUKTY A OBJEDNÁVKA
+   NAČÍTANIE PRODUKTOV
 ========================================================= */
 
-let savedProducts = null;
-
-
-/*
-  Pokúsime sa načítať existujúci sklad.
-*/
+let products = [];
 
 try {
 
-  savedProducts =
+  const saved =
     JSON.parse(
       localStorage.getItem("vp_products")
     );
 
+  if (
+    Array.isArray(saved) &&
+    saved.length > 0
+  ) {
+
+    products = saved;
+
+  } else {
+
+    products =
+      DEFAULT.map(function(product) {
+
+        return {
+          ...product,
+          category: "Matičné dosky"
+        };
+
+      });
+
+  }
+
 } catch (error) {
 
-  savedProducts = null;
+  products =
+    DEFAULT.map(function(product) {
+
+      return {
+        ...product,
+        category: "Matičné dosky"
+      };
+
+    });
 
 }
 
 
-/*
-  Ak je uložený sklad prázdny alebo poškodený,
-  použijeme pôvodných 49 položiek.
-*/
+/* =========================================================
+   DOPLNENIE KATEGÓRIE EXISTUJÚCIM PRODUKTOM
+========================================================= */
 
-let products =
-  Array.isArray(savedProducts) &&
-  savedProducts.length > 0
-    ? savedProducts
-    : DEFAULT.map(p => ({ ...p }));
+products =
+  products.map(function(product) {
+
+    return {
+
+      ...product,
+
+      category:
+        product.category ||
+        "Matičné dosky"
+
+    };
+
+  });
 
 
-/*
-  EXISTUJÚCE PRODUKTY:
-
-  Ak ešte nemajú kategóriu,
-  automaticky ich zaradíme do
-  Matičné dosky.
-
-  Tým pádom všetkých pôvodných
-  49 kusov zostane v tejto kategórii.
-*/
-
-products = products.map(function(product) {
-
-  return {
-
-    ...product,
-
-    category:
-      product.category ||
-      "Matičné dosky"
-
-  };
-
-});
-
+/* =========================================================
+   KOŠÍK
+========================================================= */
 
 let cart = [];
-
 
 try {
 
@@ -169,7 +166,9 @@ try {
     );
 
   if (Array.isArray(savedCart)) {
+
     cart = savedCart;
+
   }
 
 } catch (error) {
@@ -179,30 +178,9 @@ try {
 }
 
 
-/*
-  Uložíme produkty s kategóriami.
-*/
-
-localStorage.setItem(
-  "vp_products",
-  JSON.stringify(products)
-);
-
-
-/* =========================
-   POMOCNÁ FUNKCIA
-========================= */
-
-function qs(selector) {
-
-  return document.querySelector(selector);
-
-}
-
-
-/* =========================
+/* =========================================================
    ULOŽENIE
-========================= */
+========================================================= */
 
 function save() {
 
@@ -219,9 +197,22 @@ function save() {
 }
 
 
+save();
+
+
+/* =========================================================
+   POMOCNÁ FUNKCIA
+========================================================= */
+
+function qs(selector) {
+
+  return document.querySelector(selector);
+
+}
+
+
 /* =========================================================
    OBRÁZKY
-   TOTO JE TVOJ PÔVODNÝ ZOZNAM
 ========================================================= */
 
 const PRODUCT_IMAGES = {
@@ -299,24 +290,32 @@ const PRODUCT_IMAGES = {
 
 
 /* =========================================================
-   OBRÁZOK PRODUKTU
+   AUTOMATICKÉ HĽADANIE OBRÁZKU
 ========================================================= */
 
 function getProductImage(product) {
 
   /*
-    Najskôr presne podľa zoznamu obrázkov.
+    Najprv použijeme presný názov
+    zo zoznamu PRODUCT_IMAGES.
   */
 
-  if (PRODUCT_IMAGES[product.name]) {
+  if (
+    PRODUCT_IMAGES.hasOwnProperty(
+      product.name
+    )
+  ) {
 
-    return PRODUCT_IMAGES[product.name];
+    return PRODUCT_IMAGES[
+      product.name
+    ];
 
   }
 
 
   /*
-    Potom automatické hľadanie podľa názvu.
+    Ak obrázok nie je v zozname,
+    pokúsime sa ho nájsť podľa názvu.
   */
 
   const clean =
@@ -326,50 +325,13 @@ function getProductImage(product) {
       .trim();
 
 
-  const candidates = [
-
-    clean + ".jpg",
-
-    clean + ".png",
-
-    clean.replace(/ /g, "") + ".jpg",
-
-    clean.replace(/ /g, "") + ".png"
-
-  ];
-
-
-  return candidates[0];
+  return clean + ".jpg";
 
 }
 
 
 /* =========================================================
-   VYHĽADÁVANIE
-========================================================= */
-
-function getSearchValue() {
-
-  const search =
-    qs("#search");
-
-
-  if (!search) {
-
-    return "";
-
-  }
-
-
-  return search.value
-    .toLowerCase()
-    .trim();
-
-}
-
-
-/* =========================================================
-   AKTUÁLNA KATEGÓRIA
+   VYBRANÁ KATEGÓRIA
 ========================================================= */
 
 let selectedCategory =
@@ -387,7 +349,7 @@ function renderCategoryButtons() {
 
 
   /*
-    Ak v index.html kontajner nie je,
+    Ak categoryFilters nie je v index.html,
     vytvoríme ho automaticky.
   */
 
@@ -398,7 +360,9 @@ function renderCategoryButtons() {
 
 
     if (!productsEl) {
+
       return;
+
     }
 
 
@@ -471,21 +435,43 @@ function renderCategoryButtons() {
 
 
 /* =========================================================
+   VYHĽADÁVANIE
+========================================================= */
+
+function getSearchValue() {
+
+  const search =
+    qs("#search");
+
+
+  if (!search) {
+
+    return "";
+
+  }
+
+
+  return search.value
+    .toLowerCase()
+    .trim();
+
+}
+
+
+/* =========================================================
    VYHĽADÁVANIE PRODUKTOV
 ========================================================= */
 
 function searchProducts() {
 
-  const search =
-    getSearchValue();
-
-
-  render(search);
+  render(
+    getSearchValue()
+  );
 
 
   const stock =
-    document.querySelector("#sklad") ||
-    document.querySelector("#products");
+    qs("#sklad") ||
+    qs("#products");
 
 
   if (stock) {
@@ -516,7 +502,7 @@ function render(searchValue = null) {
 
 
   /*
-    Najskôr filtrujeme podľa kategórie.
+    Kategória
   */
 
   let list =
@@ -541,7 +527,7 @@ function render(searchValue = null) {
 
 
   /*
-    Potom filtrujeme podľa vyhľadávania.
+    Vyhľadávanie
   */
 
   if (search) {
@@ -550,12 +536,12 @@ function render(searchValue = null) {
       list.filter(function(product) {
 
         const name =
-          product.name
+          String(product.name)
             .toLowerCase();
 
 
         const code =
-          product.code
+          String(product.code)
             .toLowerCase();
 
 
@@ -576,120 +562,122 @@ function render(searchValue = null) {
     qs("#products");
 
 
-  if (productsEl) {
+  if (!productsEl) {
 
-
-    /*
-      Žiadny výsledok.
-    */
-
-    if (!list.length) {
-
-      productsEl.innerHTML = `
-
-        <div class="no-results">
-
-          <h3>
-            Žiadna súčiastka sa nenašla
-          </h3>
-
-          <p>
-            V tejto kategórii zatiaľ
-            nie sú žiadne súčiastky.
-          </p>
-
-        </div>
-
-      `;
-
-    }
-
-
-    /*
-      Produkty.
-    */
-
-    else {
-
-      productsEl.innerHTML =
-        list.map(function(product) {
-
-          const image =
-            getProductImage(product);
-
-
-          return `
-
-            <article
-              class="product product-card"
-            >
-
-              <div class="product-image">
-
-                <img
-                  src="${encodeURI(image)}"
-                  alt="${product.name}"
-                  onerror="this.style.display='none';"
-                >
-
-              </div>
-
-
-              <h3>
-                ${product.name}
-              </h3>
-
-
-              <div class="code">
-                ${product.code}
-              </div>
-
-
-              <div class="price">
-
-                ${
-                  product.price > 0
-
-                    ? product.price.toFixed(2) + " €"
-
-                    : "Cena na vyžiadanie"
-                }
-
-              </div>
-
-
-              <div class="stock">
-
-                Skladom:
-                ${product.qty}
-                ks
-
-              </div>
-
-
-              <button
-                onclick="add(${product.id})"
-                ${product.qty <= 0 ? "disabled" : ""}
-              >
-
-                Pridať do košíku
-
-              </button>
-
-
-            </article>
-
-          `;
-
-        }).join("");
-
-    }
+    return;
 
   }
 
 
   /*
-    Celkový počet kusov skladom.
+    Žiadny výsledok
+  */
+
+  if (!list.length) {
+
+    productsEl.innerHTML = `
+
+      <div class="no-results">
+
+        <h3>
+          Žiadna súčiastka sa nenašla
+        </h3>
+
+        <p>
+          Skús zadať iný názov alebo vyber inú kategóriu.
+        </p>
+
+      </div>
+
+    `;
+
+  }
+
+
+  /*
+    Produkty
+  */
+
+  else {
+
+    productsEl.innerHTML =
+      list.map(function(product) {
+
+        const image =
+          getProductImage(product);
+
+
+        return `
+
+          <article
+            class="product product-card"
+          >
+
+            <div class="product-image">
+
+              <img
+                src="./${encodeURI(image)}"
+                alt="${product.name}"
+                class="product-photo"
+              >
+
+            </div>
+
+
+            <h3>
+              ${product.name}
+            </h3>
+
+
+            <div class="code">
+              ${product.code}
+            </div>
+
+
+            <div class="price">
+
+              ${
+                Number(product.price) > 0
+
+                  ? Number(product.price).toFixed(2) + " €"
+
+                  : "Cena na vyžiadanie"
+              }
+
+            </div>
+
+
+            <div class="stock">
+
+              Skladom:
+              ${product.qty}
+              ks
+
+            </div>
+
+
+            <button
+              type="button"
+              onclick="add(${product.id})"
+              ${Number(product.qty) <= 0 ? "disabled" : ""}
+            >
+
+              Pridať do košíku
+
+            </button>
+
+
+          </article>
+
+        `;
+
+      }).join("");
+
+  }
+
+
+  /*
+    Počet kusov skladom
   */
 
   const stockCount =
@@ -702,8 +690,10 @@ function render(searchValue = null) {
       products.reduce(
         function(sum, product) {
 
-          return sum +
-            Number(product.qty || 0);
+          return (
+            sum +
+            Number(product.qty || 0)
+          );
 
         },
         0
@@ -713,7 +703,7 @@ function render(searchValue = null) {
 
 
   /*
-    Počet produktov.
+    Počet produktov
   */
 
   const productCount =
@@ -729,7 +719,7 @@ function render(searchValue = null) {
 
 
   /*
-    Informácia o vyhľadávaní.
+    Informácia o vyhľadávaní
   */
 
   const searchInfo =
@@ -741,11 +731,10 @@ function render(searchValue = null) {
     if (search) {
 
       searchInfo.textContent =
-        `Vyhľadávanie: ${search}`;
+        "Vyhľadávanie: " +
+        search;
 
-    }
-
-    else {
+    } else {
 
       searchInfo.textContent =
         "";
@@ -764,9 +753,9 @@ function render(searchValue = null) {
 function add(id) {
 
   const product =
-    products.find(function(p) {
+    products.find(function(item) {
 
-      return p.id === id;
+      return item.id === id;
 
     });
 
@@ -792,8 +781,8 @@ function add(id) {
   if (existing) {
 
     if (
-      existing.amount <
-      product.qty
+      Number(existing.amount) <
+      Number(product.qty)
     ) {
 
       existing.amount++;
@@ -801,6 +790,7 @@ function add(id) {
     }
 
   }
+
 
   else {
 
@@ -835,7 +825,7 @@ function add(id) {
 
 
 /* =========================================================
-   VYKRESLENIE KOŠÍKA
+   KOŠÍK
 ========================================================= */
 
 function renderCart() {
@@ -861,6 +851,7 @@ function renderCart() {
 
     `;
 
+
     updateCartCount();
 
     return;
@@ -879,13 +870,12 @@ function renderCart() {
             ${item.name}
           </strong>
 
-
           <span>
             ${item.amount} ks
           </span>
 
-
           <button
+            type="button"
             onclick="removeFromCart(${item.id})"
           >
 
@@ -906,7 +896,7 @@ function renderCart() {
 
 
 /* =========================================================
-   ODSTRÁNENIE Z KOŠÍKA
+   ODSTRÁNIŤ Z KOŠÍKA
 ========================================================= */
 
 function removeFromCart(id) {
@@ -929,7 +919,7 @@ function removeFromCart(id) {
 
 
 /* =========================================================
-   VYPRÁZDNENIE KOŠÍKA
+   VYPRÁZDNIŤ KOŠÍK
 ========================================================= */
 
 function clearCart() {
@@ -946,7 +936,7 @@ function clearCart() {
 
 
 /* =========================================================
-   POČÍTADLO KOŠÍKA
+   POČET POLOŽIEK V KOŠÍKU
 ========================================================= */
 
 function updateCartCount() {
@@ -966,8 +956,10 @@ function updateCartCount() {
     cart.reduce(
       function(sum, item) {
 
-        return sum +
-          Number(item.amount || 0);
+        return (
+          sum +
+          Number(item.amount || 0)
+        );
 
       },
       0
@@ -1105,7 +1097,7 @@ function setupMenu() {
 
 
 /* =========================================================
-   VYHĽADÁVANIE
+   VYHĽADÁVANIE V HORNEJ LIŠTE
 ========================================================= */
 
 function setupSearch() {
@@ -1154,7 +1146,8 @@ function setupSearch() {
 
 
   /*
-    Vyhľadávanie počas písania.
+    Filtrovanie okamžite
+    počas písania.
   */
 
   search.addEventListener(
@@ -1182,7 +1175,7 @@ function setupLogo() {
   if (logo) {
 
     logo.src =
-      "logo.jpg";
+      "./logo.jpg";
 
   }
 
@@ -1190,60 +1183,28 @@ function setupLogo() {
 
 
 /* =========================================================
-   OBNOVENIE ÚDAJOV
+   OPRAVA STARŠÍCH PRODUKTOV
 ========================================================= */
 
-function restoreProductsIfNeeded() {
+function repairProducts() {
 
   /*
-    Ak by sa niekedy produkty
-    vymazali z localStorage,
-    obnovíme pôvodných 49.
-  */
-
-  if (
-    !Array.isArray(products) ||
-    products.length === 0
-  ) {
-
-    products =
-      DEFAULT.map(function(product) {
-
-        return {
-
-          ...product,
-
-          category:
-            "Matičné dosky"
-
-        };
-
-      });
-
-
-    save();
-
-  }
-
-
-  /*
-    Staršie uložené produkty,
-    ktoré ešte nemali kategóriu,
-    dostanú Matičné dosky.
+    Ak je v localStorage stará verzia
+    bez kategórií, doplníme ich.
   */
 
   products =
     products.map(function(product) {
 
-      return {
+      if (!product.category) {
 
-        ...product,
+        product.category =
+          "Matičné dosky";
 
-        category:
-          product.category ||
-          "Matičné dosky"
+      }
 
-      };
+
+      return product;
 
     });
 
@@ -1254,65 +1215,64 @@ function restoreProductsIfNeeded() {
 
 
 /* =========================================================
-   SPUSTENIE STRÁNKY
+   SPUSTENIE
 ========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   function() {
 
-
     /*
-      Obnova skladu.
+      Opraviť staré produkty
     */
 
-    restoreProductsIfNeeded();
+    repairProducts();
 
 
     /*
-      Kategórie.
+      Vytvoriť kategórie
     */
 
     renderCategoryButtons();
 
 
     /*
-      Produkty.
+      Zobraziť produkty
     */
 
     render();
 
 
     /*
-      Košík.
+      Zobraziť košík
     */
 
     renderCart();
 
 
     /*
-      Počítadlo košíka.
+      Aktualizovať počet košíka
     */
 
     updateCartCount();
 
 
     /*
-      Menu.
+      Hamburger menu
     */
 
     setupMenu();
 
 
     /*
-      Vyhľadávanie.
+      Vyhľadávanie
     */
 
     setupSearch();
 
 
     /*
-      Logo.
+      Logo
     */
 
     setupLogo();
