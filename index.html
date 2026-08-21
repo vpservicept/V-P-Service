@@ -7,17 +7,184 @@
 
   <title>V&P Service | Sklad náhradných dielov</title>
 
-  <!-- DÔLEŽITÉ: súbor sa volá styles.css -->
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* ================================
+       HORNÁ LIŠTA
+    ================================= */
+
+    .topbar {
+      position: relative;
+      z-index: 1000;
+    }
+
+    /* Pravá časť hlavičky */
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    /* ================================
+       KOŠÍK
+    ================================= */
+
+    .cart-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      color: white;
+      text-decoration: none;
+
+      padding: 9px 12px;
+      border-radius: 10px;
+
+      font-weight: 600;
+      font-size: 15px;
+
+      transition: 0.2s ease;
+    }
+
+    .cart-link:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #f4c542;
+    }
+
+    .cart-icon {
+      font-size: 19px;
+      line-height: 1;
+    }
+
+
+    /* ================================
+       TRI ČIARKY
+    ================================= */
+
+    .menu-btn {
+      width: 48px;
+      height: 48px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      gap: 5px;
+
+      cursor: pointer;
+
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 10px;
+
+      background: rgba(20,15,35,0.9);
+      color: white;
+    }
+
+    .menu-btn span {
+      display: block;
+
+      width: 24px;
+      height: 2px;
+
+      background: white;
+      border-radius: 2px;
+    }
+
+    .menu-btn:hover {
+      border-color: rgba(244,197,66,0.7);
+    }
+
+
+    /* ================================
+       ROZBALOVACIE MENU
+    ================================= */
+
+    .menu {
+      position: absolute;
+
+      top: calc(100% + 10px);
+      right: 20px;
+
+      width: 230px;
+
+      display: none;
+      flex-direction: column;
+
+      padding: 8px;
+
+      background: rgba(15,10,25,0.98);
+
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 14px;
+
+      box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+
+      z-index: 9999;
+    }
+
+    .menu.open {
+      display: flex;
+    }
+
+    .menu a {
+      display: block;
+
+      padding: 13px 14px;
+
+      color: white;
+      text-decoration: none;
+
+      border-radius: 9px;
+
+      font-weight: 600;
+    }
+
+    .menu a:hover {
+      background: rgba(255,255,255,0.08);
+      color: #f4c542;
+    }
+
+
+    /* ================================
+       MOBIL
+    ================================= */
+
+    @media (max-width: 700px) {
+
+      .topbar-actions {
+        gap: 5px;
+      }
+
+      .cart-link {
+        padding: 8px;
+      }
+
+      .cart-link .cart-text {
+        display: none;
+      }
+
+      .menu {
+        right: 10px;
+      }
+
+    }
+  </style>
+
 </head>
+
 
 <body>
 
-  <!-- =====================================================
+
+  <!-- ==========================================
        HORNÁ LIŠTA
-  ====================================================== -->
+  =========================================== -->
 
   <header class="topbar">
+
 
     <!-- LOGO + NÁZOV -->
     <div class="brand">
@@ -28,7 +195,9 @@
         alt="V&P Service logo"
       >
 
-      <span>V&P Service</span>
+      <span>
+        V&P Service
+      </span>
 
     </div>
 
@@ -57,59 +226,91 @@
     </form>
 
 
-    <!-- TRI VODOROVNÉ ČIARKY -->
-    <button
-      id="menuButton"
-      class="menu-btn"
-      type="button"
-      aria-label="Otvoriť menu"
-    >
+    <!-- ======================================
+         PRAVÁ ČASŤ
+    ======================================= -->
 
-      <span></span>
-      <span></span>
-      <span></span>
-
-    </button>
+    <div class="topbar-actions">
 
 
-    <!-- ROZBALOVACIE MENU -->
-    <div
+      <!-- KOŠÍK -->
+      <a
+        href="#objednavka"
+        class="cart-link"
+        id="cartLink"
+      >
+
+        <span class="cart-icon">
+          🛒
+        </span>
+
+        <span class="cart-text">
+          Košík
+        </span>
+
+      </a>
+
+
+      <!-- TRI ČIARKY -->
+      <button
+        id="menuButton"
+        class="menu-btn"
+        type="button"
+        aria-label="Otvoriť menu"
+        aria-expanded="false"
+      >
+
+        <span></span>
+        <span></span>
+        <span></span>
+
+      </button>
+
+
+    </div>
+
+
+    <!-- ======================================
+         MENU PO KLIKNUTÍ NA TRI ČIARKY
+    ======================================= -->
+
+    <nav
       id="mobileMenu"
       class="menu"
     >
 
-      <a href="#sklad">
-        📦 Sklad
-      </a>
-
-      <a href="#objednavka">
-        🛒 Objednávka
-      </a>
-
       <a href="#administracia">
         ⚙️ Administrácia
+      </a>
+
+      <a href="#sklad">
+        🔧 Diely
       </a>
 
       <a href="#kontakt">
         📞 Kontakt
       </a>
 
-    </div>
+      <a href="#objednavka">
+        🛒 Nákupný košík
+      </a>
+
+    </nav>
 
   </header>
 
 
 
-  <!-- =====================================================
+  <!-- ==========================================
        HLAVNÝ OBSAH
-  ====================================================== -->
+  =========================================== -->
 
   <main>
 
 
-    <!-- =================================================
+    <!-- ======================================
          HERO
-    ================================================== -->
+    ======================================= -->
 
     <section class="hero">
 
@@ -154,11 +355,11 @@
         </div>
 
 
-        <!-- ŠTATISTIKY VPRAVO -->
+        <!-- ŠTATISTIKY -->
         <div class="hero-card">
 
 
-          <!-- ONLINE NÁVŠTEVNÍCI -->
+          <!-- ONLINE -->
           <div class="stat">
 
             <strong id="onlineNumber">
@@ -196,9 +397,9 @@
 
 
 
-    <!-- =================================================
+    <!-- ======================================
          SKLAD
-    ================================================== -->
+    ======================================= -->
 
     <section
       id="sklad"
@@ -230,9 +431,10 @@
 
 
       <!--
-        SEM JAVASCRIPT AUTOMATICKY VLOŽÍ
-        VŠETKY SÚČIASTKY AJ S OBRÁZKAMI
+        APP.JS SEM VLOŽÍ PRODUKTY
+        AJ S ICH OBRÁZKAMI
       -->
+
       <div
         id="products"
         class="grid"
@@ -242,9 +444,9 @@
 
 
 
-    <!-- =================================================
-         OBJEDNÁVKA
-    ================================================== -->
+    <!-- ======================================
+         OBJEDNÁVKA / KOŠÍK
+    ======================================= -->
 
     <section
       id="objednavka"
@@ -252,17 +454,17 @@
     >
 
       <div class="eyebrow">
-        OBJEDNÁVKA
+        NÁKUPNÝ KOŠÍK
       </div>
 
       <h2>
-        Objednávka
+        Nákupný košík
       </h2>
 
       <div id="cart">
 
         <p>
-          Objednávka je zatiaľ prázdna.
+          Košík je zatiaľ prázdny.
         </p>
 
       </div>
@@ -271,9 +473,9 @@
 
 
 
-    <!-- =================================================
+    <!-- ======================================
          ADMINISTRÁCIA
-    ================================================== -->
+    ======================================= -->
 
     <section
       id="administracia"
@@ -296,9 +498,9 @@
 
 
 
-    <!-- =================================================
+    <!-- ======================================
          KONTAKT
-    ================================================== -->
+    ======================================= -->
 
     <section
       id="kontakt"
@@ -328,11 +530,162 @@
 
 
 
-  <!-- =====================================================
-       JAVASCRIPT
-  ====================================================== -->
+  <!-- ==========================================
+       PÔVODNÝ APP.JS
+  =========================================== -->
 
   <script src="app.js"></script>
+
+
+  <!-- ==========================================
+       DOPLNKOVÉ ÚPRAVY
+  =========================================== -->
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+
+      /* ========================================
+         TRI ČIARKY -> OTVORIŤ / ZAVRIEŤ MENU
+      ======================================== */
+
+      const menuButton =
+        document.getElementById("menuButton");
+
+      const mobileMenu =
+        document.getElementById("mobileMenu");
+
+
+      if (menuButton && mobileMenu) {
+
+        menuButton.addEventListener("click", function (event) {
+
+          event.stopPropagation();
+
+          const isOpen =
+            mobileMenu.classList.toggle("open");
+
+          menuButton.setAttribute(
+            "aria-expanded",
+            isOpen ? "true" : "false"
+          );
+
+        });
+
+
+        /* klik mimo menu -> zavrie menu */
+
+        document.addEventListener("click", function (event) {
+
+          if (
+            !mobileMenu.contains(event.target) &&
+            !menuButton.contains(event.target)
+          ) {
+
+            mobileMenu.classList.remove("open");
+
+            menuButton.setAttribute(
+              "aria-expanded",
+              "false"
+            );
+
+          }
+
+        });
+
+
+        /* klik na položku menu -> zavrie menu */
+
+        mobileMenu
+          .querySelectorAll("a")
+          .forEach(function (link) {
+
+            link.addEventListener("click", function () {
+
+              mobileMenu.classList.remove("open");
+
+              menuButton.setAttribute(
+                "aria-expanded",
+                "false"
+              );
+
+            });
+
+          });
+
+      }
+
+
+      /* ========================================
+         "PRIDAŤ DO OBJEDNÁVKY"
+         -> "PRIDAŤ DO KOŠÍKU"
+      ======================================== */
+
+      function changeButtonText() {
+
+        document
+          .querySelectorAll("button")
+          .forEach(function (button) {
+
+            if (
+              button.textContent
+                .trim()
+                .toLowerCase()
+                .includes("pridať do objednávky")
+            ) {
+
+              button.textContent =
+                "Pridať do košíku";
+
+            }
+
+          });
+
+      }
+
+
+      /*
+        app.js môže produkty vytvoriť až
+        po načítaní stránky, preto kontrolujeme
+        tlačidlá ešte niekoľkokrát.
+      */
+
+      changeButtonText();
+
+      setTimeout(changeButtonText, 300);
+      setTimeout(changeButtonText, 800);
+      setTimeout(changeButtonText, 1500);
+      setTimeout(changeButtonText, 3000);
+
+
+      /* ========================================
+         SLEDOVANIE NOVO VYTVORENÝCH PRODUKTOV
+      ======================================== */
+
+      const products =
+        document.getElementById("products");
+
+      if (products) {
+
+        const observer =
+          new MutationObserver(function () {
+
+            changeButtonText();
+
+          });
+
+        observer.observe(products, {
+          childList: true,
+          subtree: true
+        });
+
+      }
+
+    });
+
+  </script>
+
 
 </body>
 
