@@ -50,6 +50,7 @@ const DEFAULT = [
   {id:49, name:"Tecno Spark 8", code:"VP-049", price:0, qty:1}
 ];
 
+
 let products =
   JSON.parse(localStorage.getItem("vp_products") || "null") || DEFAULT;
 
@@ -68,284 +69,186 @@ function save() {
 }
 
 
-/* =========================================================
-   OBRÁZKY PRODUKTOV
-   ========================================================= */
+/* =========================================
+   VYHĽADÁVANIE
+   HĽADÁ SA IBA V NÁZVE SÚČIASTKY
+========================================= */
 
-function getImageNames(productName) {
-
-  const specialImages = {
-
-    "Huawei Y5-2": [
-      "Huawei Y5 II.png",
-      "Huawei Y5-2.jpg",
-      "Huawei Y5-2.png"
-    ]
-
-  };
-
-  if (specialImages[productName]) {
-    return specialImages[productName];
-  }
-
-  /*
-    Pri dlhom názve, napríklad:
-    Infinix Smart 8 – poškodený konektor flex od displeja
-
-    sa použije iba:
-    Infinix Smart 8
-  */
-
-  const shortName =
-    productName.split(" – ")[0].trim();
-
-  return [
-    shortName + ".jpg",
-    shortName + ".jpeg",
-    shortName + ".png"
-  ];
-}
-
-
-/*
-  Vytvorí obrázok a automaticky skúsi JPG, JPEG a PNG.
-  Ak obrázok neexistuje, skúsi ďalší formát.
-*/
-
-function createProductImage(productName) {
-
-  const imageNames =
-    getImageNames(productName);
-
-  let index = 0;
-
-  const img =
-    document.createElement("img");
-
-  img.alt = productName;
-
-  img.style.width = "100%";
-  img.style.height = "220px";
-  img.style.objectFit = "contain";
-  img.style.borderRadius = "12px";
-  img.style.marginBottom = "15px";
-  img.style.background = "#f5f5f5";
-  img.style.display = "block";
-
-  function tryNextImage() {
-
-    if (index >= imageNames.length) {
-
-      /*
-        Ak obrázok neexistuje,
-        obrázok sa jednoducho skryje.
-      */
-
-      img.style.display = "none";
-      return;
-    }
-
-    const fileName =
-      imageNames[index];
-
-    index++;
-
-    img.src =
-      encodeURI(fileName);
-  }
-
-  img.onerror = function() {
-    tryNextImage();
-  };
-
-  tryNextImage();
-
-  return img;
-}
-
-
-/* =========================================================
-   VYKRESLENIE PRODUKTOV
-   ========================================================= */
-
-function render() {
+function findProducts(searchText) {
 
   const search =
-    (qs("#search")?.value || "")
+    String(searchText || "")
       .toLowerCase()
       .trim();
 
 
-  const list =
-    products.filter(p =>
-      p.name.toLowerCase().includes(search) ||
-      p.code.toLowerCase().includes(search)
-    );
+  /*
+    Ak používateľ nič nezadal,
+    zobrazíme celý sklad.
+  */
 
+  if (search === "") {
+    return products;
+  }
+
+
+  /*
+    Hľadáme IBA v názve produktu.
+
+    Príklad:
+    "moto" nájde:
+    Moto E2
+    Moto E7 Plus
+    Moto E7 Power
+    Moto E13
+    Moto E20
+    Moto G14
+
+    Nenájde Huawei, Samsung, Redmi atď.
+  */
+
+  return products.filter(product => {
+
+    const productName =
+      String(product.name || "")
+        .toLowerCase()
+        .trim();
+
+
+    return productName.includes(search);
+
+  });
+}
+
+
+/* =========================================
+   VYKRESLENIE PRODUKTOV
+========================================= */
+
+function renderProducts(list) {
 
   const productsEl =
     qs("#products");
 
 
-  if (productsEl) {
-
-    productsEl.innerHTML = "";
-
-
-    list.forEach(p => {
-
-      const article =
-        document.createElement("article");
-
-      article.className =
-        "product";
-
-
-      /* OBRÁZOK */
-
-      const image =
-        createProductImage(p.name);
-
-      article.appendChild(image);
-
-
-      /* NÁZOV */
-
-      const title =
-        document.createElement("h3");
-
-      title.textContent =
-        p.name;
-
-      article.appendChild(title);
-
-
-      /* KÓD */
-
-      const code =
-        document.createElement("div");
-
-      code.className =
-        "code";
-
-      code.textContent =
-        p.code;
-
-      article.appendChild(code);
-
-
-      /* CENA */
-
-      const price =
-        document.createElement("div");
-
-      price.className =
-        "price";
-
-      price.textContent =
-        p.price > 0
-          ? p.price.toFixed(2) + " €"
-          : "Cena na vyžiadanie";
-
-      article.appendChild(price);
-
-
-      /* SKLAD */
-
-      const stock =
-        document.createElement("div");
-
-      stock.className =
-        "stock";
-
-      stock.textContent =
-        "Skladom: " + p.qty + " ks";
-
-      article.appendChild(stock);
-
-
-      /* TLAČIDLO */
-
-      const button =
-        document.createElement("button");
-
-      button.textContent =
-        "Pridať do objednávky";
-
-      button.onclick =
-        () => add(p.id);
-
-      article.appendChild(button);
-
-
-      productsEl.appendChild(article);
-
-    });
-
+  if (!productsEl) {
+    return;
   }
 
 
-  const stockCount =
-    qs("#stockCount");
+  /* ŽIADNY VÝSLEDOK */
 
+  if (list.length === 0) {
 
-  if (stockCount) {
+    productsEl.innerHTML = `
 
-    stockCount.textContent =
-      products.reduce(
-        (sum, p) => sum + p.qty,
-        0
-      );
+      <div class="no-results">
 
+        <div class="no-results-icon">
+          🔎
+        </div>
+
+        <h3>
+          Súčiastka sa nenašla
+        </h3>
+
+        <p>
+          Skontrolujte názov modelu alebo skúste iné vyhľadávanie.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
   }
 
 
-  const availableCount =
-    qs("#availableCount");
+  /* VÝSLEDKY */
 
+  productsEl.innerHTML =
+    list.map(product => `
 
-  if (availableCount) {
+      <article class="product">
 
-    availableCount.textContent =
-      products.reduce(
-        (sum, p) => sum + p.qty,
-        0
-      );
+        <h3>
+          ${product.name}
+        </h3>
 
-  }
+        <div class="code">
+          ${product.code}
+        </div>
 
+        <div class="price">
 
-  const productCount =
-    qs("#productCount");
+          ${
+            product.price > 0
+              ? Number(product.price).toFixed(2) + " €"
+              : "Cena na vyžiadanie"
+          }
 
+        </div>
 
-  if (productCount) {
+        <div class="stock">
 
-    productCount.textContent =
-      products.length;
+          Skladom:
+          ${product.qty}
+          ks
 
-  }
+        </div>
 
+        <button
+          onclick="add(${product.id})"
+        >
+          Pridať do objednávky
+        </button>
+
+      </article>
+
+    `).join("");
 }
 
 
-/* =========================================================
-   OBJEDNÁVKA
-   ========================================================= */
+/* =========================================
+   VYHĽADAŤ
+========================================= */
+
+function doSearch(value) {
+
+  const results =
+    findProducts(value);
+
+
+  renderProducts(results);
+}
+
+
+/* =========================================
+   PRIDANIE DO OBJEDNÁVKY
+========================================= */
 
 function add(id) {
 
   const product =
-    products.find(p => p.id === id);
+    products.find(
+      product => product.id === id
+    );
 
 
   if (!product || product.qty <= 0) {
+
+    alert(
+      "Táto súčiastka momentálne nie je skladom."
+    );
+
     return;
   }
 
 
   const existing =
-    cart.find(x => x.id === id);
+    cart.find(
+      item => item.id === id
+    );
 
 
   if (existing) {
@@ -357,9 +260,13 @@ function add(id) {
   } else {
 
     cart.push({
+
       id: product.id,
+
       name: product.name,
+
       amount: 1
+
     });
 
   }
@@ -369,12 +276,16 @@ function add(id) {
 
   renderCart();
 
+
   alert(
     "Diel bol pridaný do objednávky."
   );
-
 }
 
+
+/* =========================================
+   OBJEDNÁVKA
+========================================= */
 
 function renderCart() {
 
@@ -410,14 +321,14 @@ function renderCart() {
         </span>
 
         <button
-          onclick="removeFromCart(${item.id})">
+          onclick="removeFromCart(${item.id})"
+        >
           Odstrániť
         </button>
 
       </div>
 
     `).join("");
-
 }
 
 
@@ -431,7 +342,6 @@ function removeFromCart(id) {
   save();
 
   renderCart();
-
 }
 
 
@@ -442,22 +352,59 @@ function clearCart() {
   save();
 
   renderCart();
-
 }
 
 
-/* =========================================================
+/* =========================================
    SPUSTENIE STRÁNKY
-   ========================================================= */
+========================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
 
-    render();
+    /*
+      Na začiatku zobrazíme celý sklad.
+    */
+
+    renderProducts(products);
 
     renderCart();
 
+
+    /* Počet druhov súčiastok */
+
+    const stockCount =
+      qs("#stockCount");
+
+    if (stockCount) {
+
+      stockCount.textContent =
+        products.length;
+
+    }
+
+
+    /* Celkový počet kusov */
+
+    const availableCount =
+      qs("#availableCount");
+
+    if (availableCount) {
+
+      availableCount.textContent =
+        products.reduce(
+          (sum, product) =>
+            sum + Number(product.qty || 0),
+          0
+        );
+
+    }
+
+
+    /* =====================================
+       VYHĽADÁVANIE PRI SKLADE
+    ===================================== */
 
     const search =
       qs("#search");
@@ -467,7 +414,77 @@ document.addEventListener(
 
       search.addEventListener(
         "input",
-        render
+        () => {
+
+          doSearch(search.value);
+
+        }
+      );
+
+    }
+
+
+    /* =====================================
+       VYHĽADÁVANIE V HORNEJ LIŠTE
+    ===================================== */
+
+    const topSearch =
+      qs("#topSearch");
+
+
+    const topSearchForm =
+      qs("#topSearchForm");
+
+
+    if (topSearchForm) {
+
+      topSearchForm.addEventListener(
+        "submit",
+        event => {
+
+          event.preventDefault();
+
+
+          const value =
+            topSearch.value;
+
+
+          /*
+            Prenesieme text aj do
+            vyhľadávania pri sklade.
+          */
+
+          if (search) {
+            search.value = value;
+          }
+
+
+          /*
+            Vyfiltrujeme produkty.
+          */
+
+          doSearch(value);
+
+
+          /*
+            Posunieme stránku
+            priamo na výsledky.
+          */
+
+          const sklad =
+            qs("#sklad");
+
+
+          if (sklad) {
+
+            sklad.scrollIntoView({
+              behavior: "smooth",
+              block: "start"
+            });
+
+          }
+
+        }
       );
 
     }
