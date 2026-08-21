@@ -10,16 +10,16 @@
   <link rel="stylesheet" href="styles.css">
 
   <style>
-    /* ================================
+
+    /* =====================================================
        HORNÁ LIŠTA
-    ================================= */
+    ===================================================== */
 
     .topbar {
       position: relative;
       z-index: 1000;
     }
 
-    /* Pravá časť hlavičky */
     .topbar-actions {
       display: flex;
       align-items: center;
@@ -27,11 +27,14 @@
       margin-left: auto;
     }
 
-    /* ================================
+
+    /* =====================================================
        KOŠÍK
-    ================================= */
+    ===================================================== */
 
     .cart-link {
+      position: relative;
+
       display: flex;
       align-items: center;
       gap: 6px;
@@ -49,7 +52,7 @@
     }
 
     .cart-link:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255,255,255,0.08);
       color: #f4c542;
     }
 
@@ -58,9 +61,29 @@
       line-height: 1;
     }
 
-    /* ================================
+    .cart-count {
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 999px;
+
+      background: #f4c542;
+      color: #120d1d;
+
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+
+    /* =====================================================
        TRI ČIARKY
-    ================================= */
+    ===================================================== */
 
     .menu-btn {
       width: 48px;
@@ -96,9 +119,10 @@
       border-color: rgba(244,197,66,0.7);
     }
 
-    /* ================================
-       ROZBALOVACIE MENU
-    ================================= */
+
+    /* =====================================================
+       ROZBAĽOVACIE MENU
+    ===================================================== */
 
     .menu {
       position: absolute;
@@ -123,6 +147,7 @@
       z-index: 9999;
     }
 
+    .menu.show,
     .menu.open {
       display: flex;
     }
@@ -145,36 +170,90 @@
       color: #f4c542;
     }
 
-    /* ================================
-       POČET POLOŽIEK V KOŠÍKU
-    ================================= */
 
-    .cart-link {
-      position: relative;
+    /* =====================================================
+       KATEGÓRIE
+    ===================================================== */
+
+    #categoryFilters {
+      width: 100%;
+
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+
+      gap: 10px;
+
+      margin: 0 0 25px 0;
+      padding: 0;
     }
 
-    .cart-count {
-      min-width: 20px;
-      height: 20px;
-      padding: 0 6px;
+    #categoryFilters .category-btn {
+      appearance: none;
+      -webkit-appearance: none;
 
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      cursor: pointer;
 
-      border-radius: 999px;
+      padding: 11px 17px;
 
+      border: 1px solid rgba(244,197,66,0.35);
+      border-radius: 10px;
+
+      background: rgba(18,13,29,0.92);
+      color: white;
+
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+
+      line-height: 1.2;
+
+      transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    #categoryFilters .category-btn:hover {
+      background: rgba(244,197,66,0.15);
+      border-color: #f4c542;
+      color: #f4c542;
+
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    #categoryFilters .category-btn.active {
       background: #f4c542;
       color: #120d1d;
 
-      font-size: 12px;
-      font-weight: 800;
-      line-height: 1;
+      border-color: #f4c542;
+
+      box-shadow:
+        0 4px 14px rgba(244,197,66,0.25);
     }
 
-    /* ================================
+    #categoryFilters .category-btn.active:hover {
+      background: #ffd65c;
+      color: #120d1d;
+    }
+
+    #categoryFilters .category-btn:active {
+      transform: scale(0.97);
+    }
+
+    #categoryFilters .category-btn:focus {
+      outline: none;
+    }
+
+
+    /* =====================================================
        MOBIL
-    ================================= */
+    ===================================================== */
 
     @media (max-width: 700px) {
 
@@ -194,7 +273,37 @@
         right: 10px;
       }
 
+      #categoryFilters {
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      #categoryFilters .category-btn {
+        padding: 9px 12px;
+        font-size: 13px;
+        border-radius: 9px;
+      }
+
     }
+
+
+    /* =====================================================
+       VEĽMI MALÉ MOBILY
+    ===================================================== */
+
+    @media (max-width: 450px) {
+
+      #categoryFilters {
+        gap: 7px;
+      }
+
+      #categoryFilters .category-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+    }
+
   </style>
 
 </head>
@@ -203,14 +312,15 @@
 <body>
 
 
-  <!-- ==========================================
+  <!-- =====================================================
        HORNÁ LIŠTA
-  =========================================== -->
+  ===================================================== -->
 
   <header class="topbar">
 
 
     <!-- LOGO + NÁZOV -->
+
     <div class="brand">
 
       <img
@@ -227,6 +337,7 @@
 
 
     <!-- VYHĽADÁVANIE -->
+
     <form
       id="searchForm"
       class="top-search"
@@ -250,14 +361,13 @@
     </form>
 
 
-    <!-- ======================================
-         PRAVÁ ČASŤ
-    ======================================= -->
+    <!-- PRAVÁ ČASŤ -->
 
     <div class="topbar-actions">
 
 
       <!-- KOŠÍK -->
+
       <a
         href="#objednavka"
         class="cart-link"
@@ -284,6 +394,7 @@
 
 
       <!-- TRI ČIARKY -->
+
       <button
         id="menuButton"
         class="menu-btn"
@@ -302,9 +413,7 @@
     </div>
 
 
-    <!-- ======================================
-         MENU PO KLIKNUTÍ NA TRI ČIARKY
-    ======================================= -->
+    <!-- MENU -->
 
     <nav
       id="mobileMenu"
@@ -333,16 +442,16 @@
 
 
 
-  <!-- ==========================================
+  <!-- =====================================================
        HLAVNÝ OBSAH
-  =========================================== -->
+  ===================================================== -->
 
   <main>
 
 
-    <!-- ======================================
+    <!-- ===================================================
          HERO
-    ======================================= -->
+    =================================================== -->
 
     <section class="hero">
 
@@ -350,6 +459,7 @@
 
 
         <!-- ĽAVÁ ČASŤ -->
+
         <div class="hero-text">
 
           <div class="eyebrow">
@@ -377,6 +487,7 @@
 
 
         <!-- STREDNÉ LOGO -->
+
         <div class="hero-logo">
 
           <img
@@ -388,10 +499,12 @@
 
 
         <!-- ŠTATISTIKY -->
+
         <div class="hero-card">
 
 
           <!-- ONLINE -->
+
           <div class="stat">
 
             <strong id="onlineNumber">
@@ -409,6 +522,7 @@
 
 
           <!-- SKLAD -->
+
           <div class="stat">
 
             <strong id="stockCount">
@@ -429,9 +543,9 @@
 
 
 
-    <!-- ======================================
+    <!-- ===================================================
          SKLAD
-    ======================================= -->
+    =================================================== -->
 
     <section
       id="sklad"
@@ -456,16 +570,37 @@
 
 
       <!-- INFORMÁCIA O VYHĽADÁVANÍ -->
+
       <div
         id="searchInfo"
         class="search-info"
       ></div>
 
 
-      <!--
-        APP.JS SEM VLOŽÍ PRODUKTY
-        AJ S ICH OBRÁZKAMI
-      -->
+      <!-- =================================================
+           KATEGÓRIE
+
+           JavaScript ich automaticky naplní:
+           Všetky súčiastky
+           Matičné dosky
+           Batérie
+           Displeje
+           Odtlačky prstov
+           Konektory
+           Kamery
+           Reproduktory
+           Kryty
+           Flex káble
+      ================================================== -->
+
+      <div
+        id="categoryFilters"
+      ></div>
+
+
+      <!-- =================================================
+           PRODUKTY
+      ================================================== -->
 
       <div
         id="products"
@@ -476,9 +611,9 @@
 
 
 
-    <!-- ======================================
+    <!-- ===================================================
          OBJEDNÁVKA / KOŠÍK
-    ======================================= -->
+    =================================================== -->
 
     <section
       id="objednavka"
@@ -505,9 +640,9 @@
 
 
 
-    <!-- ======================================
+    <!-- ===================================================
          ADMINISTRÁCIA
-    ======================================= -->
+    =================================================== -->
 
     <section
       id="administracia"
@@ -530,9 +665,9 @@
 
 
 
-    <!-- ======================================
+    <!-- ===================================================
          KONTAKT
-    ======================================= -->
+    =================================================== -->
 
     <section
       id="kontakt"
@@ -562,25 +697,48 @@
 
 
 
-  <!-- ==========================================
-       PÔVODNÝ APP.JS
-  =========================================== -->
+  <!-- =====================================================
+       DÔLEŽITÉ:
+       POUŽÍVAME VERZIU JAVASCRIPTU S KATEGÓRIAMI
+  ===================================================== -->
 
-  <script src="app.js"></script>
+  <script src="app_kategorie_upraveny.js"></script>
 
 
-  <!-- ==========================================
-       DOPLNKOVÉ ÚPRAVY
-  =========================================== -->
+  <!-- =====================================================
+       DOPLNKOVÉ FUNKCIE
+  ===================================================== -->
 
   <script>
 
     document.addEventListener("DOMContentLoaded", function () {
 
 
-      /* ========================================
-         TRI ČIARKY -> OTVORIŤ / ZAVRIEŤ MENU
-      ======================================== */
+      /* =================================================
+         ONLINE NÁVŠTEVNÍCI
+         10 ↔ 9 každých 10 sekúnd
+      ================================================= */
+
+      const onlineNumber =
+        document.getElementById("onlineNumber");
+
+      let online = 10;
+
+      setInterval(function () {
+
+        online = online === 10 ? 9 : 10;
+
+        if (onlineNumber) {
+          onlineNumber.textContent = online;
+        }
+
+      }, 10000);
+
+
+
+      /* =================================================
+         MENU
+      ================================================= */
 
       const menuButton =
         document.getElementById("menuButton");
@@ -591,49 +749,35 @@
 
       if (menuButton && mobileMenu) {
 
-        menuButton.addEventListener("click", function (event) {
 
-          event.stopPropagation();
+        menuButton.addEventListener(
+          "click",
+          function (event) {
 
-          const isOpen =
-            mobileMenu.classList.toggle("open");
+            event.stopPropagation();
 
-          menuButton.setAttribute(
-            "aria-expanded",
-            isOpen ? "true" : "false"
-          );
-
-        });
-
-
-        /* klik mimo menu -> zavrie menu */
-
-        document.addEventListener("click", function (event) {
-
-          if (
-            !mobileMenu.contains(event.target) &&
-            !menuButton.contains(event.target)
-          ) {
-
-            mobileMenu.classList.remove("open");
+            const isOpen =
+              mobileMenu.classList.toggle("open");
 
             menuButton.setAttribute(
               "aria-expanded",
-              "false"
+              isOpen ? "true" : "false"
             );
 
           }
+        );
 
-        });
 
+        /* Klik mimo menu */
 
-        /* klik na položku menu -> zavrie menu */
+        document.addEventListener(
+          "click",
+          function (event) {
 
-        mobileMenu
-          .querySelectorAll("a")
-          .forEach(function (link) {
-
-            link.addEventListener("click", function () {
+            if (
+              !mobileMenu.contains(event.target) &&
+              !menuButton.contains(event.target)
+            ) {
 
               mobileMenu.classList.remove("open");
 
@@ -642,29 +786,60 @@
                 "false"
               );
 
-            });
+            }
+
+          }
+        );
+
+
+        /* Klik na položku menu */
+
+        mobileMenu
+          .querySelectorAll("a")
+          .forEach(function (link) {
+
+            link.addEventListener(
+              "click",
+              function () {
+
+                mobileMenu.classList.remove("open");
+
+                menuButton.setAttribute(
+                  "aria-expanded",
+                  "false"
+                );
+
+              }
+            );
 
           });
 
       }
 
 
-      /* ========================================
-         "PRIDAŤ DO OBJEDNÁVKY"
-         -> "PRIDAŤ DO KOŠÍKU"
-      ======================================== */
+
+      /* =================================================
+         PREMENOVANIE TLAČIDLA
+         PRIDAŤ DO OBJEDNÁVKY
+         →
+         PRIDAŤ DO KOŠÍKU
+      ================================================= */
 
       function changeButtonText() {
 
         document
-          .querySelectorAll("button")
+          .querySelectorAll("#products button")
           .forEach(function (button) {
 
-            if (
+            const text =
               button.textContent
                 .trim()
-                .toLowerCase()
-                .includes("pridať do objednávky")
+                .toLowerCase();
+
+
+            if (
+              text.includes("pridať do objednávky") ||
+              text.includes("pridat do objednavky")
             ) {
 
               button.textContent =
@@ -677,12 +852,6 @@
       }
 
 
-      /*
-        app.js môže produkty vytvoriť až
-        po načítaní stránky, preto kontrolujeme
-        tlačidlá ešte niekoľkokrát.
-      */
-
       changeButtonText();
 
       setTimeout(changeButtonText, 300);
@@ -691,12 +860,14 @@
       setTimeout(changeButtonText, 3000);
 
 
-      /* ========================================
-         SLEDOVANIE NOVO VYTVORENÝCH PRODUKTOV
-      ======================================== */
+
+      /* =================================================
+         SLEDOVANIE NOVÝCH PRODUKTOV
+      ================================================= */
 
       const products =
         document.getElementById("products");
+
 
       if (products) {
 
@@ -705,35 +876,66 @@
 
             changeButtonText();
 
+            updateCartCount();
+
           });
 
-        observer.observe(products, {
-          childList: true,
-          subtree: true
-        });
+
+        observer.observe(
+          products,
+          {
+            childList: true,
+            subtree: true
+          }
+        );
 
       }
 
-    });
-
-  </script>
 
 
-  <!-- POČÍTADLO POLOŽIEK V KOŠÍKU -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
+      /* =================================================
+         POČET POLOŽIEK V KOŠÍKU
+      ================================================= */
 
       const cartCount =
         document.getElementById("cartCount");
 
-      if (!cartCount) return;
-
-      let count = 0;
-
 
       function updateCartCount() {
 
-        cartCount.textContent = count;
+        if (!cartCount) {
+          return;
+        }
+
+
+        try {
+
+          const savedCart =
+            JSON.parse(
+              localStorage.getItem("vp_cart") || "[]"
+            );
+
+
+          const total =
+            savedCart.reduce(
+              function (sum, item) {
+
+                return sum + (
+                  Number(item.amount) || 0
+                );
+
+              },
+              0
+            );
+
+
+          cartCount.textContent = total;
+
+        } catch (error) {
+
+          cartCount.textContent = "0";
+
+        }
 
       }
 
@@ -741,41 +943,47 @@
       updateCartCount();
 
 
-      /*
-        Funguje aj pre tlačidlá,
-        ktoré app.js vytvorí až neskôr.
-      */
+      /* Po pridaní do košíka aktualizovať číslo */
 
-      document.addEventListener("click", function (event) {
+      document.addEventListener(
+        "click",
+        function (event) {
 
-        const button =
-          event.target.closest("button");
-
-        if (!button) return;
-
-
-        const text =
-          button.textContent
-            .trim()
-            .toLowerCase();
+          const button =
+            event.target.closest(
+              "#products button"
+            );
 
 
-        if (
-          text.includes("pridať do košíku") ||
-          text.includes("pridat do kosiku") ||
-          text.includes("pridať do objednávky") ||
-          text.includes("pridat do objednavky")
-        ) {
+          if (!button) {
+            return;
+          }
 
-          count++;
 
-          updateCartCount();
+          setTimeout(
+            updateCartCount,
+            100
+          );
+
+          setTimeout(
+            updateCartCount,
+            500
+          );
 
         }
+      );
 
-      }, true);
+
+      /* Aktualizovať aj pri návrate na stránku */
+
+      window.addEventListener(
+        "focus",
+        updateCartCount
+      );
+
 
     });
+
   </script>
 
 
