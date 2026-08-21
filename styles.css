@@ -6,21 +6,8 @@ html {
   scroll-behavior: smooth;
 }
 
-:root {
-  --gold: #e5b63f;
-  --gold-light: #ffd86b;
-  --purple: #8d45f5;
-  --purple-dark: #6d31d5;
-  --dark: #08060d;
-  --card: rgba(20, 15, 35, 0.9);
-  --border: rgba(255, 255, 255, 0.12);
-  --muted: #aaa5b5;
-  --green: #42d986;
-}
-
 body {
   margin: 0;
-  min-height: 100vh;
 
   font-family:
     Inter,
@@ -34,94 +21,128 @@ body {
 
   background:
     linear-gradient(
-      rgba(8, 4, 15, 0.72),
-      rgba(8, 4, 15, 0.9)
+      rgba(5, 3, 12, 0.72),
+      rgba(5, 3, 12, 0.82)
     ),
     url("pozadie.jpg");
 
   background-size: cover;
-  background-position: center top;
+  background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
 
-  overflow-x: hidden;
+  min-height: 100vh;
 }
 
-/* ==================================================
+
+/* =========================
    HORNÁ LIŠTA
-================================================== */
+========================= */
 
 .topbar {
-  position: sticky;
-  top: 0;
-  z-index: 3000;
 
-  width: 100%;
-  min-height: 72px;
+  position: sticky;
+
+  top: 0;
+
+  z-index: 1000;
+
+  height: 72px;
 
   display: flex;
+
   align-items: center;
 
-  padding: 12px 5%;
+  justify-content: space-between;
 
-  gap: 20px;
+  gap: 25px;
+
+  padding: 0 28px;
 
   background:
-    rgba(8, 5, 14, 0.96);
+    rgba(5, 3, 12, 0.96);
 
   border-bottom:
-    1px solid rgba(255, 255, 255, 0.1);
+    1px solid rgba(255,255,255,0.12);
 
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(12px);
 }
 
+
+/* Logo + názov */
+
 .brand {
-  flex-shrink: 0;
 
-  color: white;
+  display: flex;
 
-  font-size: 21px;
-  font-weight: 800;
+  align-items: center;
 
-  white-space: nowrap;
+  gap: 10px;
+
+  min-width: 230px;
+}
+
+.brand img {
+
+  width: 42px;
+
+  height: 42px;
+
+  object-fit: contain;
+
+  display: block;
 }
 
 .brand span {
-  color: var(--gold);
+
+  font-size: 20px;
+
+  font-weight: 800;
+
+  color: #fff;
 }
 
-/* ==================================================
-   VYHĽADÁVANIE HORE
-================================================== */
+.brand span::first-letter {
+  color: #f4bd35;
+}
+
+
+/* =========================
+   VYHĽADÁVANIE
+========================= */
 
 .top-search {
-  flex: 1;
-
-  max-width: 540px;
-
-  margin: 0 auto;
 
   display: flex;
+
   align-items: center;
 
-  gap: 8px;
+  justify-content: center;
+
+  flex: 1;
+
+  max-width: 610px;
+
+  margin: 0 auto;
 }
 
 .top-search input {
+
   width: 100%;
 
-  padding: 12px 15px;
+  height: 44px;
 
-  color: white;
+  padding: 0 16px;
 
-  background:
-    rgba(255, 255, 255, 0.07);
+  border-radius: 11px 0 0 11px;
 
   border:
-    1px solid rgba(255, 255, 255, 0.18);
+    1px solid rgba(255,255,255,0.18);
 
-  border-radius: 10px;
+  background:
+    rgba(20,17,28,0.95);
+
+  color: #fff;
 
   outline: none;
 
@@ -129,629 +150,617 @@ body {
 }
 
 .top-search input::placeholder {
-  color: #aaa5b5;
+  color: #aaa;
 }
 
 .top-search input:focus {
-  border-color: var(--gold);
 
-  box-shadow:
-    0 0 0 3px rgba(229, 182, 63, 0.12);
+  border-color: #f0b82e;
 }
 
+
 .top-search button {
-  flex-shrink: 0;
 
-  padding: 12px 18px;
+  height: 44px;
 
-  color: #1b1308;
+  padding: 0 24px;
+
+  border: 0;
+
+  border-radius: 0 11px 11px 0;
 
   background:
     linear-gradient(
       135deg,
-      var(--gold-light),
-      #d9a437
+      #ffd45a,
+      #e4a928
     );
 
-  border: 0;
-  border-radius: 10px;
+  color: #120d05;
 
-  font-size: 14px;
   font-weight: 800;
 
   cursor: pointer;
 }
 
-/* ==================================================
-   TRI ČIARKY
-================================================== */
 
-.menu-wrapper {
-  position: relative;
+/* =========================
+   TRI ČIARKY
+========================= */
+
+.menu-btn {
+
+  width: 48px;
+
+  height: 48px;
 
   flex-shrink: 0;
 
-  margin-left: auto;
-}
-
-.menu-btn {
-  width: 46px;
-  height: 46px;
-
-  padding: 0;
-
   display: flex;
+
   flex-direction: column;
+
   justify-content: center;
+
   align-items: center;
 
-  gap: 5px;
-
-  color: white;
+  gap: 6px;
 
   background:
-    rgba(255, 255, 255, 0.05);
+    rgba(20,17,28,0.95);
 
   border:
-    1px solid rgba(255, 255, 255, 0.16);
+    1px solid rgba(255,255,255,0.2);
 
-  border-radius: 10px;
+  border-radius: 11px;
 
   cursor: pointer;
-}
 
-.menu-btn:hover {
-  background:
-    rgba(255, 255, 255, 0.1);
+  padding: 0;
 }
 
 .menu-btn span {
-  display: block;
 
-  width: 22px;
+  width: 24px;
+
   height: 2px;
 
-  background: white;
+  background: #fff;
 
-  border-radius: 2px;
-}
-
-/* ==================================================
-   ROZBALENÉ MENU
-================================================== */
-
-.main-menu {
-  position: absolute;
-
-  top: 56px;
-  right: 0;
-
-  width: 235px;
-
-  padding: 8px;
+  border-radius: 3px;
 
   display: block;
+}
+
+.menu-btn:hover {
+
+  border-color: #f0b82e;
+}
+
+
+/* =========================
+   ROZBALENÉ MENU
+========================= */
+
+.menu {
+
+  position: absolute;
+
+  top: 62px;
+
+  right: 28px;
+
+  display: none;
+
+  flex-direction: column;
+
+  min-width: 210px;
+
+  padding: 10px;
 
   background:
-    rgba(18, 13, 28, 0.99);
+    rgba(12,9,20,0.98);
 
   border:
-    1px solid rgba(255, 255, 255, 0.14);
+    1px solid rgba(255,255,255,0.15);
 
   border-radius: 14px;
 
   box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.55);
+    0 15px 40px rgba(0,0,0,0.5);
 
-  opacity: 0;
-  visibility: hidden;
-
-  transform: translateY(-8px);
-
-  transition:
-    opacity 0.2s ease,
-    visibility 0.2s ease,
-    transform 0.2s ease;
-
-  pointer-events: none;
+  backdrop-filter: blur(15px);
 }
 
-.main-menu.open {
-  opacity: 1;
-  visibility: visible;
-
-  transform: translateY(0);
-
-  pointer-events: auto;
+.menu.open {
+  display: flex;
 }
 
-.main-menu a,
-.main-menu button {
+.menu a,
+.menu button {
+
+  display: block;
+
   width: 100%;
 
-  display: flex;
-  align-items: center;
+  padding: 12px 14px;
 
-  padding: 13px 14px;
+  border: 0;
 
-  margin: 2px 0;
-
-  color: white;
+  border-radius: 9px;
 
   background: transparent;
 
-  border: 0;
-  border-radius: 9px;
+  color: #fff;
 
   text-decoration: none;
 
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 600;
-
   text-align: left;
+
+  font-size: 15px;
 
   cursor: pointer;
 }
 
-.main-menu a:hover,
-.main-menu button:hover {
-  color: var(--gold-light);
+.menu a:hover,
+.menu button:hover {
 
   background:
-    rgba(255, 255, 255, 0.08);
+    rgba(255,193,50,0.12);
+
+  color: #ffd052;
 }
 
-/* ==================================================
-   HLAVNÝ OBSAH
-================================================== */
 
-main {
-  width: min(1200px, 94%);
-  margin: 0 auto;
-}
-
-.section {
-  padding: 70px 0;
-}
-
-/* ==================================================
+/* =========================
    HERO
-================================================== */
+========================= */
 
 .hero {
+
   width: min(1200px, 94%);
-  min-height: 560px;
 
   margin: 0 auto;
 
-  display: grid;
+  min-height: 480px;
 
-  grid-template-columns: 1.2fr 0.8fr;
+  position: relative;
 
-  align-items: center;
+  overflow: hidden;
 
-  gap: 40px;
+  border:
+    1px solid rgba(255,255,255,0.14);
+
+  border-radius: 0 0 22px 22px;
 
   background:
     linear-gradient(
       90deg,
-      rgba(8, 4, 15, 0.62),
-      rgba(8, 4, 15, 0.28)
+      rgba(5,3,10,0.86),
+      rgba(5,3,10,0.30)
     ),
     url("pozadie.jpg");
 
   background-size: cover;
-  background-position: center 18%;
 
-  border-radius:
-    0 0 28px 28px;
-
-  overflow: hidden;
-
-  box-shadow:
-    0 25px 80px rgba(0, 0, 0, 0.4);
+  background-position: center;
 }
 
-.hero > div {
+
+.hero-content {
+
+  min-height: 480px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    0.9fr
+    0.95fr;
+
+  align-items: center;
+
+  gap: 25px;
+
+  padding: 45px;
+}
+
+
+/* Ľavý text */
+
+.hero-text {
   position: relative;
   z-index: 2;
 }
 
-.hero > div:first-child {
-  padding: 45px;
-}
-
 .eyebrow {
-  margin: 0 0 12px;
 
-  color: var(--gold);
+  margin: 0 0 14px;
+
+  color: #f4bd35;
 
   font-size: 12px;
-  font-weight: 800;
+
+  font-weight: 900;
 
   letter-spacing: 3px;
 }
 
 .hero h1 {
-  margin: 0 0 25px;
 
-  color: white;
+  margin: 0;
 
   font-size:
-    clamp(46px, 6vw, 76px);
+    clamp(48px, 5vw, 76px);
 
   line-height: 0.98;
 
-  letter-spacing: -2px;
+  letter-spacing: -3px;
 
-  text-align: left;
-
-  text-shadow:
-    0 5px 25px rgba(0, 0, 0, 0.55);
+  color: #fff;
 }
 
-.hero .lead {
-  max-width: 620px;
+.lead {
 
-  margin: 0 0 30px;
+  max-width: 600px;
 
-  color: #ddd8e3;
+  margin: 24px 0;
 
-  font-size: 17px;
+  color: #ddd;
 
-  line-height: 1.7;
+  font-size: 16px;
+
+  line-height: 1.6;
 }
+
+
+/* Stredné logo */
+
+.hero-logo {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  height: 100%;
+
+  position: relative;
+
+  z-index: 1;
+}
+
+.hero-logo img {
+
+  width: min(300px, 90%);
+
+  max-height: 340px;
+
+  object-fit: contain;
+
+  display: block;
+
+  filter:
+    drop-shadow(
+      0 0 25px rgba(244,189,53,0.35)
+    );
+}
+
+
+/* =========================
+   ŠTATISTIKA
+========================= */
 
 .hero-card {
-  display: grid;
 
-  grid-template-columns: auto 1fr;
-
-  gap: 12px 20px;
-
-  margin-right: 35px;
-
-  padding: 30px;
+  padding: 28px 30px;
 
   background:
-    rgba(13, 10, 21, 0.9);
+    rgba(10,8,17,0.88);
 
   border:
-    1px solid rgba(229, 182, 63, 0.2);
+    1px solid rgba(255,255,255,0.16);
 
-  border-radius: 22px;
+  border-radius: 18px;
 
   box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.5);
+    0 20px 50px rgba(0,0,0,0.3);
 
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
+
+  position: relative;
+
+  z-index: 2;
 }
 
-.hero-card strong {
-  color: var(--gold-light);
+.stat {
 
-  font-size: 39px;
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
 }
 
-.hero-card span {
-  align-self: center;
+.stat strong {
 
-  color: var(--muted);
+  min-width: 48px;
+
+  color: #ffd052;
+
+  font-size: 38px;
+
+  line-height: 1;
+
+  font-weight: 900;
+}
+
+.stat span {
+
+  color: #bbb;
 
   font-size: 13px;
 }
 
-/* ==================================================
+.stat-divider {
+
+  height: 1px;
+
+  margin: 25px 0;
+
+  background:
+    rgba(255,255,255,0.13);
+}
+
+
+/* =========================
    TLAČIDLÁ
-================================================== */
+========================= */
 
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+
+  display: inline-block;
 
   padding: 13px 22px;
 
-  color: white;
+  border: 0;
+
+  border-radius: 10px;
 
   background:
     linear-gradient(
       135deg,
-      var(--purple),
-      var(--purple-dark)
+      #984cff,
+      #6d25e9
     );
 
-  border: 0;
-  border-radius: 11px;
+  color: #fff;
+
+  font-weight: 800;
 
   text-decoration: none;
 
-  font-size: 14px;
-  font-weight: 800;
-
   cursor: pointer;
-
-  box-shadow:
-    0 10px 30px rgba(141, 69, 245, 0.25);
 }
 
 .btn:hover {
+
   transform: translateY(-1px);
 
-  box-shadow:
-    0 14px 32px rgba(141, 69, 245, 0.35);
+  opacity: 0.92;
 }
 
-/* ==================================================
-   SKLAD
-================================================== */
+
+/* =========================
+   HLAVNÝ OBSAH
+========================= */
+
+main {
+
+  width: min(1200px, 94%);
+
+  margin: 0 auto;
+}
+
+.section {
+
+  padding: 65px 0;
+}
 
 .section-head {
+
   display: flex;
-  align-items: flex-end;
+
   justify-content: space-between;
 
-  gap: 30px;
+  align-items: end;
 
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 h2 {
-  margin: 8px 0 0;
 
-  font-size:
-    clamp(30px, 4vw, 44px);
+  margin: 0;
 
-  text-align: left;
+  font-size: 38px;
+
+  letter-spacing: -1px;
 }
 
-#search {
-  width: 350px;
-  max-width: 100%;
 
-  padding: 13px 15px;
-
-  color: white;
-
-  background:
-    rgba(10, 7, 18, 0.75);
-
-  border:
-    1px solid rgba(255, 255, 255, 0.15);
-
-  border-radius: 10px;
-
-  outline: none;
-
-  font-size: 14px;
-}
-
-#search:focus {
-  border-color: var(--gold);
-}
-
-/* ==================================================
+/* =========================
    PRODUKTY
-================================================== */
+========================= */
 
-#products {
+.grid {
+
   display: grid;
 
   grid-template-columns:
     repeat(4, minmax(0, 1fr));
 
-  gap: 20px;
-
-  width: 100%;
+  gap: 18px;
 }
 
 .product {
-  padding: 16px;
 
   background:
-    linear-gradient(
-      180deg,
-      rgba(29, 23, 43, 0.95),
-      rgba(14, 11, 21, 0.95)
-    );
+    rgba(10,9,17,0.90);
 
   border:
-    1px solid rgba(255, 255, 255, 0.1);
+    1px solid rgba(255,255,255,0.14);
 
-  border-radius: 17px;
+  border-radius: 15px;
 
-  text-align: center;
+  padding: 14px;
+
+  text-align: left;
 
   box-shadow:
-    0 12px 35px rgba(0, 0, 0, 0.3);
+    0 10px 30px rgba(0,0,0,0.25);
 
   overflow: hidden;
-
-  transition:
-    transform 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.product:hover {
-  transform: translateY(-5px);
-
-  border-color:
-    rgba(229, 182, 63, 0.35);
 }
 
 .product img {
-  display: block;
 
   width: 100%;
-  height: 210px;
+
+  height: 190px;
 
   object-fit: contain;
 
-  margin: 0 auto 15px;
+  display: block;
 
-  padding: 8px;
+  margin-bottom: 12px;
 
-  border-radius: 12px;
-
-  background:
-    rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
 }
 
 .product h3 {
-  min-height: 45px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 8px 0;
 
-  margin: 6px 0;
-
-  font-size: 17px;
-
-  text-align: center;
+  font-size: 18px;
 }
 
-.code {
-  margin-bottom: 10px;
+.product .code {
 
-  color: #9a82e6;
+  color: #aaa;
 
-  font-size: 12px;
+  font-size: 13px;
 }
 
-.price {
-  margin-bottom: 8px;
+.product .price {
 
-  font-size: 14px;
-  font-weight: 700;
+  margin-top: 18px;
+
+  font-size: 18px;
+
+  font-weight: 800;
 }
 
-.stock {
-  display: inline-block;
+.product .stock {
 
-  margin-bottom: 14px;
+  margin: 8px 0 15px;
 
-  padding: 5px 9px;
-
-  color: var(--green);
-
-  background:
-    rgba(66, 217, 134, 0.09);
-
-  border:
-    1px solid rgba(66, 217, 134, 0.16);
-
-  border-radius: 7px;
-
-  font-size: 12px;
-  font-weight: 700;
+  color: #00e879;
 }
 
 .product button {
+
   width: 100%;
 
-  padding: 10px;
+  padding: 12px;
 
-  color: white;
+  border: 0;
+
+  border-radius: 9px;
 
   background:
     linear-gradient(
       135deg,
-      var(--purple),
-      var(--purple-dark)
+      #984cff,
+      #6d25e9
     );
 
-  border: 0;
-  border-radius: 9px;
+  color: #fff;
 
-  font-weight: 700;
+  font-weight: 800;
 
   cursor: pointer;
 }
 
-/* ==================================================
-   VYHĽADANIE NIČ NENAŠLO
-================================================== */
 
-.no-results {
-  grid-column: 1 / -1;
-
-  padding: 70px 20px;
-
-  text-align: center;
-}
-
-.no-results-icon {
-  font-size: 42px;
-}
-
-.no-results h3 {
-  font-size: 24px;
-}
-
-.no-results p {
-  color: var(--muted);
-}
-
-/* ==================================================
+/* =========================
    OBJEDNÁVKA
-================================================== */
+========================= */
 
 .order-section {
+
   display: grid;
 
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns:
+    1fr 1fr;
 
   gap: 40px;
-
-  align-items: start;
 }
 
 #cart {
-  min-height: 100px;
+
+  margin-top: 20px;
 
   padding: 20px;
 
   background:
-    rgba(20, 15, 35, 0.88);
+    rgba(10,9,17,0.88);
+
+  border-radius: 15px;
 
   border:
-    1px solid rgba(255, 255, 255, 0.1);
-
-  border-radius: 16px;
+    1px solid rgba(255,255,255,0.12);
 }
 
 .cart-item {
+
   display: flex;
 
   align-items: center;
+
   justify-content: space-between;
 
   gap: 15px;
 
-  padding: 12px 0;
+  padding: 13px 0;
 
   border-bottom:
-    1px solid rgba(255, 255, 255, 0.08);
+    1px solid rgba(255,255,255,0.1);
+}
+
+.cart-item:last-child {
+  border-bottom: 0;
 }
 
 .cart-item button {
+
   padding: 7px 10px;
 
-  color: white;
-
-  background:
-    #6e2d3c;
-
   border: 0;
+
   border-radius: 7px;
+
+  background: #321c3d;
+
+  color: #fff;
 
   cursor: pointer;
 }
 
 .form {
+
   display: flex;
+
   flex-direction: column;
 
   gap: 12px;
@@ -759,138 +768,82 @@ h2 {
 
 .form input,
 .form textarea {
+
   width: 100%;
 
-  padding: 13px 14px;
+  padding: 13px;
 
-  color: white;
-
-  background:
-    rgba(10, 7, 18, 0.75);
+  border-radius: 9px;
 
   border:
-    1px solid rgba(255, 255, 255, 0.12);
+    1px solid rgba(255,255,255,0.16);
 
-  border-radius: 10px;
+  background:
+    rgba(10,9,17,0.88);
+
+  color: #fff;
 
   outline: none;
-
-  font: inherit;
 }
 
 .form textarea {
+
   min-height: 120px;
 
   resize: vertical;
 }
 
 .muted {
-  color: #7f788b;
 
-  font-size: 12px;
+  color: #999;
 
-  text-align: center;
+  font-size: 13px;
 }
 
-/* ==================================================
+
+/* =========================
    KONTAKT
-================================================== */
+========================= */
 
 .contact-section {
-  display: grid;
 
-  grid-template-columns: 1fr 1fr;
-
-  gap: 40px;
-
-  align-items: center;
+  text-align: center;
 
   padding-bottom: 100px;
 }
 
-.contact-text {
-  max-width: 550px;
 
-  color: #bdb8c8;
-
-  font-size: 17px;
-
-  line-height: 1.7;
-}
-
-.contact-box {
-  padding: 25px;
-
-  background:
-    rgba(20, 15, 35, 0.88);
-
-  border:
-    1px solid rgba(255, 255, 255, 0.12);
-
-  border-radius: 18px;
-}
-
-.contact-item {
-  display: flex;
-  flex-direction: column;
-
-  gap: 6px;
-
-  padding: 14px 0;
-
-  border-bottom:
-    1px solid rgba(255, 255, 255, 0.08);
-}
-
-.contact-item:last-child {
-  border-bottom: 0;
-}
-
-.contact-item strong {
-  color: var(--gold-light);
-}
-
-.contact-item a,
-.contact-item span {
-  color: white;
-
-  text-decoration: none;
-
-  font-size: 16px;
-}
-
-/* ==================================================
-   ADMINISTRÁCIA
-================================================== */
-
-.hidden {
-  display: none !important;
-}
+/* =========================
+   ADMIN
+========================= */
 
 .modal {
+
   position: fixed;
 
   inset: 0;
 
-  z-index: 5000;
+  z-index: 2000;
 
   display: flex;
 
   align-items: center;
+
   justify-content: center;
 
   padding: 20px;
 
   background:
-    rgba(0, 0, 0, 0.75);
+    rgba(0,0,0,0.75);
+}
 
-  backdrop-filter: blur(8px);
+.modal.hidden {
+  display: none;
 }
 
 .modal-box {
-  position: relative;
 
-  width: min(650px, 100%);
+  width: min(600px, 100%);
 
   max-height: 90vh;
 
@@ -899,152 +852,273 @@ h2 {
   padding: 30px;
 
   background:
-    #171321;
+    #12101b;
 
   border:
-    1px solid rgba(255, 255, 255, 0.14);
+    1px solid rgba(255,255,255,0.15);
 
-  border-radius: 20px;
+  border-radius: 18px;
 
-  box-shadow:
-    0 30px 100px rgba(0, 0, 0, 0.6);
+  position: relative;
 }
 
 .close {
+
   position: absolute;
 
   top: 12px;
+
   right: 15px;
 
-  width: 38px;
-  height: 38px;
+  width: 36px;
 
-  color: white;
-
-  background:
-    rgba(255,255,255,0.08);
+  height: 36px;
 
   border: 0;
+
   border-radius: 8px;
 
-  font-size: 24px;
+  background: #211d2c;
+
+  color: #fff;
+
+  font-size: 25px;
 
   cursor: pointer;
 }
 
 .admin-form {
-  display: flex;
-  flex-direction: column;
+
+  display: grid;
 
   gap: 10px;
+
+  margin: 20px 0;
 }
 
 .admin-form input {
+
   padding: 12px;
 
-  color: white;
-
-  background:
-    rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
 
   border:
-    1px solid rgba(255,255,255,0.12);
+    1px solid rgba(255,255,255,0.15);
 
-  border-radius: 9px;
+  background: #0d0b13;
+
+  color: #fff;
 }
 
 .danger {
+
   margin-top: 20px;
 
   padding: 11px 15px;
 
-  color: #ffaaaa;
-
-  background:
-    rgba(160, 40, 55, 0.25);
-
   border: 0;
-  border-radius: 8px;
+
+  border-radius: 9px;
+
+  background: #7d2633;
+
+  color: #fff;
 
   cursor: pointer;
 }
 
-/* ==================================================
-   MOBIL
-================================================== */
 
-@media (max-width: 1000px) {
+/* =========================
+   TOAST
+========================= */
 
-  #products {
-    grid-template-columns:
-      repeat(3, minmax(0, 1fr));
-  }
+.toast {
 
-  .hero {
-    grid-template-columns: 1fr;
+  position: fixed;
 
-    padding: 55px 0;
-  }
+  right: 20px;
 
-  .hero-card {
-    margin: 0 30px 30px;
-  }
+  bottom: 20px;
 
-  .order-section,
-  .contact-section {
-    grid-template-columns: 1fr;
-  }
+  z-index: 3000;
+
+  padding: 13px 18px;
+
+  background: #191522;
+
+  border:
+    1px solid rgba(255,255,255,0.15);
+
+  border-radius: 10px;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition: 0.25s;
 }
 
-@media (max-width: 800px) {
+.toast.show {
+
+  opacity: 1;
+}
+
+
+/* =========================
+   MOBIL
+========================= */
+
+@media (max-width: 900px) {
 
   .topbar {
-    flex-wrap: wrap;
 
-    padding: 12px 5%;
+    padding: 0 15px;
+
+    gap: 10px;
+  }
+
+  .brand {
+
+    min-width: auto;
+  }
+
+  .brand span {
+
+    font-size: 16px;
+  }
+
+  .brand img {
+
+    width: 34px;
+
+    height: 34px;
   }
 
   .top-search {
-    order: 3;
 
-    width: 100%;
     max-width: none;
-
-    margin-top: 4px;
   }
 
-  #products {
+  .top-search button {
+
+    padding: 0 15px;
+  }
+
+  .hero-content {
+
+    grid-template-columns: 1fr;
+
+    padding: 35px 25px;
+
+    text-align: center;
+  }
+
+  .hero {
+
+    min-height: auto;
+  }
+
+  .hero-content {
+
+    min-height: auto;
+  }
+
+  .hero-text {
+
+    order: 1;
+  }
+
+  .hero-logo {
+
+    order: 2;
+
+    height: 250px;
+  }
+
+  .hero-card {
+
+    order: 3;
+  }
+
+  .lead {
+
+    margin-left: auto;
+
+    margin-right: auto;
+  }
+
+  .grid {
+
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
   }
 
-  .section-head {
-    flex-direction: column;
+  .order-section {
 
-    align-items: stretch;
-  }
-
-  #search {
-    width: 100%;
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 500px) {
 
-  .brand {
-    font-size: 18px;
+@media (max-width: 600px) {
+
+  .topbar {
+
+    height: 64px;
+  }
+
+  .brand span {
+
+    font-size: 15px;
+  }
+
+  .brand img {
+
+    width: 32px;
+
+    height: 32px;
+  }
+
+  .top-search {
+
+    display: none;
   }
 
   .menu-btn {
-    width: 42px;
-    height: 42px;
+
+    width: 44px;
+
+    height: 44px;
   }
 
-  .top-search button {
-    padding: 12px 14px;
+  .menu {
+
+    right: 15px;
+
+    top: 58px;
   }
 
-  #products {
+  .hero {
+
+    width: 100%;
+
+    border-radius: 0;
+  }
+
+  .hero h1 {
+
+    font-size: 46px;
+
+    letter-spacing: -2px;
+  }
+
+  .hero-content {
+
+    padding: 35px 20px;
+  }
+
+  .grid {
+
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
 
@@ -1052,26 +1126,22 @@ h2 {
   }
 
   .product {
+
     padding: 10px;
   }
 
   .product img {
-    height: 135px;
+
+    height: 130px;
   }
 
   .product h3 {
-    min-height: 40px;
 
-    font-size: 14px;
+    font-size: 15px;
   }
 
-  .product button {
-    padding: 9px 5px;
+  h2 {
 
-    font-size: 12px;
-  }
-
-  .hero h1 {
-    font-size: 45px;
+    font-size: 30px;
   }
 }
